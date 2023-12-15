@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['userid'] = $row['User_Id'];
             $_SESSION['account'] = $row['User_Account'];
             $_SESSION['password'] = $row['User_Password'];
-            header("Location: userstatus.php");
+            header("Location: reservation/newreservation.php");
             exit;
         } else {
             $msg = "Wrong account or password!";
