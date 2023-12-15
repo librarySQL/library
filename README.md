@@ -1,4 +1,6 @@
 ﻿# library
+### [reservation](https://github.com/librarySQL/library/blob/main/reservation.php)
+- 使用者的預約紀錄
 ### [seat](https://github.com/librarySQL/library/blob/main/seat.php)
 - 可以查全部的座位訊息
 ### [user_new_reservation](https://github.com/librarySQL/library/blob/main/user_new_reservation.php) 
