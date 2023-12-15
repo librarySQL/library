@@ -124,14 +124,23 @@ echo "<script>
                     window.location.href = editPageUrl;
                 }
 
-
                 function redirectToDeletePage(reservationId) {
-                    var deletePageUrl = 'delete_reservation.php' + '?reservationId=' + encodeURIComponent(reservationId);
-                    
-                    // 使用 JavaScript 跳轉到取消預約頁面
-                    window.location.href = deletePageUrl;
-                }
-              </script>";
+                var deleteConfirmation = confirm('是否要取消此訂單？');
+
+                if (deleteConfirmation) {
+                var deletePageUrl = 'delete_reservation.php' + '?reservationId=' + encodeURIComponent(reservationId);
+            
+                // 使用 JavaScript 跳轉到取消預約頁面
+                window.location.href = deletePageUrl;
+                } else {
+                // 使用者選擇取消，不執行任何操作
+        }
+    }
+</script>";
+;
+
+
+                
               
 
 $con->close();
