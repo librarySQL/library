@@ -77,7 +77,7 @@ if (isset($_SESSION['account']) ) {
 </div>
 <?php
 
-$con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -90,7 +90,7 @@ echo "<table>
         <th>座位編號</th>
         <th>座位樓層</th>
         <th>插座</th>
-        <th></th>
+        
     </tr>";
 
 while ($row = mysqli_fetch_array($seat)) {
@@ -98,9 +98,6 @@ while ($row = mysqli_fetch_array($seat)) {
     echo "<td>" . $row['Seat_Name'] . "</td>";
     echo "<td>" . $row['Seat_Floor'] . "</td>";
     echo "<td>" . $row['Socket'] . "</td>";
-    echo "<td>
-            <button onclick='detailsFunction(" . $row['Seat_Id'] . ")'>詳細</button>
-          </td>";
     echo "</tr>";
 }
 
