@@ -84,7 +84,51 @@ if (isset($_POST['search']) && !empty($_POST['starttime']) && !empty($_POST['end
             background-color: #ddd;
             color: black;
         }
+    
     </style>
+     <!-- 其他標頭內容 -->
+     <script>
+function redirectToSelectSeat() {
+    var starttime = document.getElementsByName('starttime')[0].value;
+    var endtime = document.getElementsByName('endtime')[0].value;
+    var seatfloor = document.getElementsByName('seatfloor')[0].value;
+    var socket = document.getElementsByName('socket')[0].value;
+
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "select_seat.php");
+
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "starttime");
+    hiddenField.setAttribute("value", starttime);
+    form.appendChild(hiddenField);
+
+    hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "endtime");
+    hiddenField.setAttribute("value", endtime);
+    form.appendChild(hiddenField);
+
+    hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "seatfloor");
+    hiddenField.setAttribute("value", seatfloor);
+    form.appendChild(hiddenField);
+
+    hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "socket");
+    hiddenField.setAttribute("value", socket);
+    form.appendChild(hiddenField);
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+
+</script>
+
 </head>
 <body> 
 <div class="navbar">
@@ -100,15 +144,16 @@ if (isset($_POST['search']) && !empty($_POST['starttime']) && !empty($_POST['end
 </div>
 
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
-        <Form class="form-signin" role="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-          
+    <form id="reservationForm" class="form-signin" role="form" onsubmit="redirectToSelectSeat(); return false;">
             <div align="center"><input type="datetime-local" class="form-control" require="require" name="starttime" placeholder="starttime"  style="width:30%;height: 40px;"></div><br>
             <div align="center"><input type="datetime-local" class="form-control" require="require" name="endtime" placeholder="endtime"  style="width:30%;height: 40px;"></div><br>
             <div align="center"><input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
             <div align="center"><input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
-            <div align="center"><button class="btn btn-primary" type="submit" name="search" style="width:30%;height: 40px;">查詢可預約座位</button></div>
+            <!-- 前面的代码保持不变 -->
+            <div align="center">
+        <input type="submit" value="查詢可預約座位" style="width:30%;height: 40px;">
+    </div>
         </Form>
-        
     </div>
 </body>
 </html>
