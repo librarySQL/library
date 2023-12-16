@@ -1,42 +1,41 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$conn = new mysqli("localhost", "root", "jenny104408!", "libdb");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-// 检查是否收到 POST 请求并且字段不为空
+
 if (isset($_SESSION['account']) && isset($_POST['starttime']) && isset($_POST['endtime']) && isset($_POST['seatfloor']) && isset($_POST['socket'])) {
-    $account=$_SESSION['account'];
+    $account = $_SESSION['account'];
     $start_time = $_POST['starttime'];
     $end_time = $_POST['endtime'];
     $seatfloor = $_POST['seatfloor'];
     $socket = $_POST['socket'];
     
-    
-
+    // 檢查是否有選擇座位並設置 $seat_name 變數
+    if (isset($_POST['seatname'])) {
+        $seat_name = $_POST['seatname'];
+    }
 } else {
     echo "未收到正确的数据";
-    // 设置默认值或进行其他处理
     $starttime = '';
     $endtime = '';
     $seatfloor = '';
     $socket = '';
+    $seat_name = ''; // 新增這行，初始化 $seat_name
 }
-// 检查用户是否已登录，如果未登录则重定向到登录页面
+
+
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header("Location: login.php");
     exit;
 }
 
-// 显示用户帐户信息
-if (isset($_SESSION['account']) ) {
+if (isset($_SESSION['account'])) {
     $userId = $_SESSION['account'];
-    // 这里你可以使用 $userId 查询数据库或其他存储来获取用户信息
-    // 在这个示例中，我们仅显示 "account 您好！" 的消息
     $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
 } else {
-    // 如果未找到用户ID，可能需要再次重定向到登录页面或者显示错误信息
     header("Location: login.php");
     exit;
 }
@@ -89,134 +88,116 @@ if (isset($_SESSION['account']) ) {
 </head>
 
 <body>
-<div class="navbar">
-    <a href="userstatus.php">會員</a>
-    <a href="seat.php">座位</a>
-    <a href="user_reservation.php">預約紀錄</a>
-    <a href="user_new_reservation.php">預約座位</a>
-    <!-- 登入、登出 -->
-    <a href="logout.php" style="float:right;">登出</a>
-    <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
-   
-    <!-- 可以加入其他需要的連結 -->
-</div>
+    <div class='navbar'>
+        <a href='../userstatus.php'>會員</a>
+        <a href='../seat/seat.php'>座位</a>
+        <a href='../reservation/reservation.php'>預約紀錄</a>
+        <a href='../reservation/newreservation.php'>新增預約</a>
+        <a href='../logout.php' style='float:right;'>登出</a>
+    </div>
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
-    <h2>可預約座位列表</h2>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-    <!-- 隱藏的 User_Id 欄位 
-    <input type="hidden" name="User_Id" value="<?php echo $row['User_Id']; ?>">
-    -->
-    <input type="hidden" name="reservationId" value="<?php echo $reservationId; ?>">
-    <!-- 帳號 -->
-    
-    <input type="hidden" id="User_Account" name="User_Account" value="<?php echo $useraccount; ?>" ><br><br>
-    
-    <!-- 座位編號 -->
-<!-- 座位編號 -->
-<label for="seatname">座位編號:</label>
-<select id="seatname" name="seatname">
-    <?php
-    // 檢查是否有選擇座位並設置 $seat_name 變數
-    if (isset($_POST['seatname'])) {
-        $seat_name = $_POST['seatname'];
+        <h2>可預約座位列表</h2>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <input type="hidden" name="reservationId" value="<?php echo $reservationId; ?>">
+
+            <input type="hidden" id="User_Account" name="User_Account" value="<?php echo $useraccount; ?>" ><br><br>
+
+            <label for="seatname">座位編號:</label>
+            <select id="seatname" name="seatname">
+                <?php
+                if (isset($_POST['seatname'])) {
+                    $seat_name = $_POST['seatname'];
+                }
+
+                $reserved_seats_query = "SELECT Seat_Id FROM reservation";
+                $reserved_seats_result = $conn->query($reserved_seats_query);
+                $reserved_seats = array();
+
+                if ($reserved_seats_result->num_rows > 0) {
+                    while ($row = $reserved_seats_result->fetch_assoc()) {
+                        $reserved_seats[] = $row['Seat_Id'];
+                    }
+                }
+
+                // 在選擇座位的 SQL 查詢中加入預約時間的條件
+// 在選擇座位的 SQL 查詢中加入預約時間的條件
+$filtered_seats_query = "SELECT s.Seat_Name 
+                        FROM seat s
+                        LEFT JOIN reservation r ON s.Seat_Id = r.Seat_Id 
+                            AND ('$start_time' BETWEEN r.Start_Time AND r.End_Time 
+                                OR '$end_time' BETWEEN r.Start_Time AND r.End_Time
+                                OR r.Start_Time BETWEEN '$start_time' AND '$end_time'
+                                OR r.End_Time BETWEEN '$start_time' AND '$end_time')
+                        WHERE s.Seat_Floor = '$seatfloor' AND s.Socket = '$socket'
+                            AND r.Seat_Id IS NULL";
+
+$filtered_seats_result = $conn->query($filtered_seats_query);
+
+if ($filtered_seats_result->num_rows > 0) {
+    while ($row = $filtered_seats_result->fetch_assoc()) {
+        $seat = $row['Seat_Name'];
+        // 將選中的座位名稱設置為 selected
+        $selected = ($seat == $seat_name) ? 'selected' : '';
+        echo "<option value='$seat' $selected>$seat</option>";
     }
-
-    // 根據用戶選擇的樓層和插座值篩選可用座位
-    if (isset($_POST['seatfloor']) && isset($_POST['socket'])) {
-        $seatfloor = $_POST['seatfloor'];
-        $socket = $_POST['socket'];
-
-        // 查询已经被预约的座位
-        $reserved_seats_query = "SELECT Seat_Id FROM reservation";
-        $reserved_seats_result = $conn->query($reserved_seats_query);
-        $reserved_seats = array();
-
-        if ($reserved_seats_result->num_rows > 0) {
-            while ($row = $reserved_seats_result->fetch_assoc()) {
-                $reserved_seats[] = $row['Seat_Id'];
-            }
-        }
-
-        // 查询符合樓層和插座条件的座位，但不包括已经被预约的座位
-        $filtered_seats_query = "SELECT Seat_Name FROM seat WHERE Seat_Floor = '$seatfloor' AND Socket = '$socket'";
-        if (!empty($reserved_seats)) {
-            $reserved_seats_list = "'" . implode("', '", $reserved_seats) . "'";
-            $filtered_seats_query .= " AND Seat_Id NOT IN ($reserved_seats_list)";
-        }else{
-            echo "錯誤";
-        }
-
-        $filtered_seats_result = $conn->query($filtered_seats_query);
-
-        if ($filtered_seats_result->num_rows > 0) {
-            // 顯示符合樓層和插座的座位選項
-            while ($row = $filtered_seats_result->fetch_assoc()) {
-                $seat = $row['Seat_Name'];
-                echo "<option value='$seat'>$seat</option>";
-            }
-        } else {
-            echo "<option value=''>沒有符合條件的座位</option>";
-        }
-    }
-    ?>
-</select>
-
-
-<br><br>
-
-    <!-- 開始時間 -->
-    <label for="starttime">開始時間:</label>
-        <input type="datetime-local" id="starttime" name="starttime" value="<?php echo htmlspecialchars($start_time); ?>" readonly><br><br>
-
-        <label for="endtime">結束時間:</label>
-        <input type="datetime-local" id="endtime" name="endtime" value="<?php echo htmlspecialchars($end_time); ?>" readonly><br><br>
-
-        <label for="seatfloor">座位樓層:</label>
-        <input type="text" id="seatfloor" name="seatfloor" value="<?php echo htmlspecialchars($seatfloor); ?>" readonly><br><br>
-
-        <label for="socket">插座:</label>
-        <input type="text" id="socket" name="socket" value="<?php echo htmlspecialchars($socket); ?>" readonly><br><br>
-            <!-- 提交按鈕 -->
-    <input type="submit" value="預約座位">
-<?php
-// 檢查 $seat_name 變數是否已設置
-if (isset($seat_name)) {
-    $user_query = "SELECT User_Id FROM user WHERE User_Account = '$account'";
-    $user_result = $conn->query($user_query);
-    
-    if ($user_result->num_rows > 0) {
-        $user_row = $user_result->fetch_assoc();
-        $user_id = $user_row['User_Id'];
-    
-        // 查詢 Seat_Id，根據座位名稱
-        $seat_query = "SELECT Seat_Id FROM seat WHERE Seat_Name = '$seat_name'";
-        $seat_result = $conn->query($seat_query);
-    
-        if ($seat_result->num_rows > 0) {
-            $seat_row = $seat_result->fetch_assoc();
-            $seat_id = $seat_row['Seat_Id'];
-    
-            // 新增預約資料
-            $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id)
-                            VALUES ('$start_time', '$end_time', '$user_id', '$seat_id')";
-    
-            if ($conn->query($insert_query) === TRUE) {
-            // 使用 JavaScript 警示視窗
-            echo '<script>alert("您預約成功了！");</script>';
-            // 導向至 reservation.php
-            echo '<script>window.location.href = "user_new_reservation.php";</script>';
-            } else {
-            echo "發生錯誤: " . $conn->error;
-            }
-        } else {
-            echo "找不到相應的座位名稱";
-        }
-    } else {
-        echo "找不到相應的使用者帳號";
-    }
+} else {
+    echo "<option value=''>沒有符合條件的座位</option>";
 }
-?>
 
+
+                ?>
+            </select>
+
+            <br><br>
+
+            <label for="starttime">開始時間:</label>
+            <input type="datetime-local" id="starttime" name="starttime" value="<?php echo htmlspecialchars($start_time); ?>" readonly><br><br>
+
+            <label for="endtime">結束時間:</label>
+            <input type="datetime-local" id="endtime" name="endtime" value="<?php echo htmlspecialchars($end_time); ?>" readonly><br><br>
+
+            <label for="seatfloor">座位樓層:</label>
+            <input type="text" id="seatfloor" name="seatfloor" value="<?php echo htmlspecialchars($seatfloor); ?>" readonly><br><br>
+
+            <label for="socket">插座:</label>
+            <input type="text" id="socket" name="socket" value="<?php echo htmlspecialchars($socket); ?>" readonly><br><br>
+
+            <input type="submit" value="預約座位">
+            
+            <?php
+            if (isset($seat_name)) {
+                $user_query = "SELECT User_Id FROM user WHERE User_Account = '$account'";
+                $user_result = $conn->query($user_query);
+                
+                if ($user_result->num_rows > 0) {
+                    $user_row = $user_result->fetch_assoc();
+                    $user_id = $user_row['User_Id'];
+                
+                    $seat_query = "SELECT Seat_Id FROM seat WHERE Seat_Name = '$seat_name'";
+                    $seat_result = $conn->query($seat_query);
+                
+                    if ($seat_result->num_rows > 0) {
+                        $seat_row = $seat_result->fetch_assoc();
+                        $seat_id = $seat_row['Seat_Id'];
+                
+                        $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id)
+                                        VALUES ('$start_time', '$end_time', '$user_id', '$seat_id')";
+                
+                        if ($conn->query($insert_query) === TRUE) {
+                            echo '<script>alert("您預約成功了！");</script>';
+                            echo '<script>window.location.href = "../reservation/newreservation.php";</script>';
+                        } else {
+                            echo "發生錯誤: " . $conn->error;
+                        }
+                    } else {
+                        echo "找不到相應的座位名稱";
+                    }
+                } else {
+                    echo "找不到相應的使用者帳號";
+                }
+            }
+            ?>
+        </form>
     </div>
 </body>
 
