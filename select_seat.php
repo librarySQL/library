@@ -1,14 +1,19 @@
 <?php
 session_start();
+$conn = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 // 检查是否收到 POST 请求并且字段不为空
 if (isset($_SESSION['account']) && isset($_POST['starttime']) && isset($_POST['endtime']) && isset($_POST['seatfloor']) && isset($_POST['socket'])) {
     $account=$_SESSION['account'];
-    $starttime = $_POST['starttime'];
-    $endtime = $_POST['endtime'];
+    $start_time = $_POST['starttime'];
+    $end_time = $_POST['endtime'];
     $seatfloor = $_POST['seatfloor'];
     $socket = $_POST['socket'];
     
-
+    
 
 } else {
     echo "未收到正确的数据";
@@ -117,28 +122,68 @@ if (isset($_SESSION['account']) ) {
         foreach ($_SESSION['available_seats'] as $seat) {
             echo "<option value='$seat'>$seat</option>";
         }
-    } else {
-        echo "<option value=''>暫無可預約座位</option>";
+        // 檢查是否有選擇座位並設置 $seat_name 變數
+        if (isset($_POST['seatname'])) {
+            $seat_name = $_POST['seatname'];
+        } else {
+            echo "<option value=''>暫無可預約座位</option>";
+        }
     }
     ?>
 </select>
+
 <br><br>
 
     <!-- 開始時間 -->
     <label for="starttime">開始時間:</label>
-        <input type="datetime-local" id="starttime" name="starttime" value="<?php echo htmlspecialchars($starttime); ?>" readonly><br><br>
+        <input type="datetime-local" id="starttime" name="starttime" value="<?php echo htmlspecialchars($start_time); ?>" readonly><br><br>
 
         <label for="endtime">結束時間:</label>
-        <input type="datetime-local" id="endtime" name="endtime" value="<?php echo htmlspecialchars($endtime); ?>" readonly><br><br>
+        <input type="datetime-local" id="endtime" name="endtime" value="<?php echo htmlspecialchars($end_time); ?>" readonly><br><br>
 
         <label for="seatfloor">座位樓層:</label>
         <input type="text" id="seatfloor" name="seatfloor" value="<?php echo htmlspecialchars($seatfloor); ?>" readonly><br><br>
 
         <label for="socket">插座:</label>
         <input type="text" id="socket" name="socket" value="<?php echo htmlspecialchars($socket); ?>" readonly><br><br>
-
-    <!-- 提交按鈕 -->
+            <!-- 提交按鈕 -->
     <input type="submit" value="預約座位">
+<?php
+// 檢查 $seat_name 變數是否已設置
+if (isset($seat_name)) {
+    $user_query = "SELECT User_Id FROM user WHERE User_Account = '$account'";
+    $user_result = $conn->query($user_query);
+    
+    if ($user_result->num_rows > 0) {
+        $user_row = $user_result->fetch_assoc();
+        $user_id = $user_row['User_Id'];
+    
+        // 查詢 Seat_Id，根據座位名稱
+        $seat_query = "SELECT Seat_Id FROM seat WHERE Seat_Name = '$seat_name'";
+        $seat_result = $conn->query($seat_query);
+    
+        if ($seat_result->num_rows > 0) {
+            $seat_row = $seat_result->fetch_assoc();
+            $seat_id = $seat_row['Seat_Id'];
+    
+            // 新增預約資料
+            $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id)
+                            VALUES ('$start_time', '$end_time', '$user_id', '$seat_id')";
+    
+            if ($conn->query($insert_query) === TRUE) {
+                echo "<br><br>"."預約新增成功";
+            } else {
+                echo "發生錯誤: " . $conn->error;
+            }
+        } else {
+            echo "找不到相應的座位名稱";
+        }
+    } else {
+        echo "找不到相應的使用者帳號";
+    }
+}
+?>
+
     </div>
 </body>
 
