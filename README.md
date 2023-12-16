@@ -11,5 +11,4 @@
 ### [edit_reservation](https://github.com/librarySQL/library/blob/main/edit_reservation.php)
 - 編輯預約紀錄(只提供編輯結束時間)
 ### [delete_reservation](https://github.com/librarySQL/library/blob/main/delete_reservation.php)
-- 在reservation.php的頁面上按下"取消預約"，這筆訂單會被刪除
-- 正在修改處：多跳出警示視窗再進行刪除動作
+- 在reservation.php的頁面上按下"取消預約"，會跳出警示視窗，按下確認後，這筆訂單會被刪除
