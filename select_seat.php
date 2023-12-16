@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$conn = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -89,18 +89,17 @@ if (isset($_SESSION['account']) ) {
 </head>
 
 <body>
-    <div class="navbar">
-        <a href="../userstatus.php">會員</a>
-        <a href="seat.php">座位</a>
-        <a href="../reservation/user_reservation.php">預約紀錄</a>
-        <a href="../reservation/user_new_reservation.php">預約座位</a>
-        <!-- 登入、登出 -->
-        <a href="logout.php" style="float:right;">登出</a>
-        <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
-       
-        <!-- 可以加入其他需要的連結 -->
-    </div>
-
+<div class="navbar">
+    <a href="userstatus.php">會員</a>
+    <a href="seat.php">座位</a>
+    <a href="user_reservation.php">預約紀錄</a>
+    <a href="user_new_reservation.php">預約座位</a>
+    <!-- 登入、登出 -->
+    <a href="logout.php" style="float:right;">登出</a>
+    <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
+   
+    <!-- 可以加入其他需要的連結 -->
+</div>
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
     <h2>可預約座位列表</h2>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
@@ -113,6 +112,7 @@ if (isset($_SESSION['account']) ) {
     <input type="hidden" id="User_Account" name="User_Account" value="<?php echo $useraccount; ?>" ><br><br>
     
     <!-- 座位編號 -->
+<!-- 座位編號 -->
 <label for="seatname">座位編號:</label>
 <select id="seatname" name="seatname">
     <?php
@@ -126,7 +126,26 @@ if (isset($_SESSION['account']) ) {
         $seatfloor = $_POST['seatfloor'];
         $socket = $_POST['socket'];
 
+        // 查询已经被预约的座位
+        $reserved_seats_query = "SELECT Seat_Id FROM reservation";
+        $reserved_seats_result = $conn->query($reserved_seats_query);
+        $reserved_seats = array();
+
+        if ($reserved_seats_result->num_rows > 0) {
+            while ($row = $reserved_seats_result->fetch_assoc()) {
+                $reserved_seats[] = $row['Seat_Id'];
+            }
+        }
+
+        // 查询符合樓層和插座条件的座位，但不包括已经被预约的座位
         $filtered_seats_query = "SELECT Seat_Name FROM seat WHERE Seat_Floor = '$seatfloor' AND Socket = '$socket'";
+        if (!empty($reserved_seats)) {
+            $reserved_seats_list = "'" . implode("', '", $reserved_seats) . "'";
+            $filtered_seats_query .= " AND Seat_Id NOT IN ($reserved_seats_list)";
+        }else{
+            echo "錯誤";
+        }
+
         $filtered_seats_result = $conn->query($filtered_seats_query);
 
         if ($filtered_seats_result->num_rows > 0) {
@@ -185,7 +204,7 @@ if (isset($seat_name)) {
             // 使用 JavaScript 警示視窗
             echo '<script>alert("您預約成功了！");</script>';
             // 導向至 reservation.php
-            echo '<script>window.location.href = "../reservation/reservation.php";</script>';
+            echo '<script>window.location.href = "user_new_reservation.php";</script>';
             } else {
             echo "發生錯誤: " . $conn->error;
             }
