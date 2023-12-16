@@ -125,9 +125,7 @@ if (isset($_SESSION['account']) ) {
         // 檢查是否有選擇座位並設置 $seat_name 變數
         if (isset($_POST['seatname'])) {
             $seat_name = $_POST['seatname'];
-        } else {
-            echo "<option value=''>暫無可預約座位</option>";
-        }
+        } 
     }
     ?>
 </select>
