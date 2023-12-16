@@ -113,22 +113,35 @@ if (isset($_SESSION['account']) ) {
     <input type="hidden" id="User_Account" name="User_Account" value="<?php echo $useraccount; ?>" ><br><br>
     
     <!-- 座位編號 -->
-    <label for="seatname">座位編號:</label>
+<label for="seatname">座位編號:</label>
 <select id="seatname" name="seatname">
     <?php
-    // 检查可用座位数组是否存在
-    if (isset($_SESSION['available_seats']) && !empty($_SESSION['available_seats'])) {
-        // 显示座位信息
-        foreach ($_SESSION['available_seats'] as $seat) {
-            echo "<option value='$seat'>$seat</option>";
+    // 檢查是否有選擇座位並設置 $seat_name 變數
+    if (isset($_POST['seatname'])) {
+        $seat_name = $_POST['seatname'];
+    }
+
+    // 根據用戶選擇的樓層和插座值篩選可用座位
+    if (isset($_POST['seatfloor']) && isset($_POST['socket'])) {
+        $seatfloor = $_POST['seatfloor'];
+        $socket = $_POST['socket'];
+
+        $filtered_seats_query = "SELECT Seat_Name FROM seat WHERE Seat_Floor = '$seatfloor' AND Socket = '$socket'";
+        $filtered_seats_result = $conn->query($filtered_seats_query);
+
+        if ($filtered_seats_result->num_rows > 0) {
+            // 顯示符合樓層和插座的座位選項
+            while ($row = $filtered_seats_result->fetch_assoc()) {
+                $seat = $row['Seat_Name'];
+                echo "<option value='$seat'>$seat</option>";
+            }
+        } else {
+            echo "<option value=''>沒有符合條件的座位</option>";
         }
-        // 檢查是否有選擇座位並設置 $seat_name 變數
-        if (isset($_POST['seatname'])) {
-            $seat_name = $_POST['seatname'];
-        } 
     }
     ?>
 </select>
+
 
 <br><br>
 
