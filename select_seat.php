@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$conn = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -90,10 +90,10 @@ if (isset($_SESSION['account']) ) {
 
 <body>
     <div class="navbar">
-        <a href="userstatus.php">會員</a>
+        <a href="../userstatus.php">會員</a>
         <a href="seat.php">座位</a>
-        <a href="user_reservation.php">預約紀錄</a>
-        <a href="user_new_reservation.php">預約座位</a>
+        <a href="../reservation/user_reservation.php">預約紀錄</a>
+        <a href="../reservation/user_new_reservation.php">預約座位</a>
         <!-- 登入、登出 -->
         <a href="logout.php" style="float:right;">登出</a>
         <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
@@ -169,9 +169,12 @@ if (isset($seat_name)) {
                             VALUES ('$start_time', '$end_time', '$user_id', '$seat_id')";
     
             if ($conn->query($insert_query) === TRUE) {
-                echo "<br><br>"."預約新增成功";
+            // 使用 JavaScript 警示視窗
+            echo '<script>alert("您預約成功了！");</script>';
+            // 導向至 reservation.php
+            echo '<script>window.location.href = "../reservation/reservation.php";</script>';
             } else {
-                echo "發生錯誤: " . $conn->error;
+            echo "發生錯誤: " . $conn->error;
             }
         } else {
             echo "找不到相應的座位名稱";
