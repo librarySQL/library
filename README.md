@@ -8,6 +8,7 @@
 -  按下查詢可預約座位後會跳轉到select_seat顯示符合條件的可預約座位
 ### [select_seat](https://github.com/librarySQL/library/blob/main/select_seat.php) 
 - 顯示符合條件的可預約座位並跳轉到預約界面
+- 讓使用者可以直接選擇想預約的座位去做預約
 ### [edit_reservation](https://github.com/librarySQL/library/blob/main/edit_reservation.php)
 - 編輯預約紀錄(只提供編輯結束時間)
 ### [delete_reservation](https://github.com/librarySQL/library/blob/main/delete_reservation.php)
