@@ -15,9 +15,12 @@ $selected_seat = ""; // 初始化選中的座位變數
 
 
                 $check_reservation_query = "SELECT r.Start_Time, r.End_Time, s.Seat_Name, s.Seat_Floor, s.Socket
-                                        FROM reservation r
-                                        INNER JOIN seat s ON r.Seat_Id = s.Seat_Id
-                                        WHERE s.Seat_Name = '$selected_seat'";
+                FROM reservation r
+                INNER JOIN seat s ON r.Seat_Id = s.Seat_Id
+                WHERE s.Seat_Name = '$selected_seat' 
+                AND r.Start_Time >= NOW()
+                ORDER BY r.Start_Time ASC;
+                ";
 
                 $reservation_result = $con->query($check_reservation_query);
 
