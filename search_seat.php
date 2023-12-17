@@ -25,6 +25,9 @@ if (isset($_SESSION['account']) ) {
     header("Location: login.php");
     exit;
 }
+if (isset($_POST['seatname'])) {
+    $seat_name = $_POST['seatname'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,12 +74,13 @@ if (isset($_SESSION['account']) ) {
 </div>
 
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <form id="reservationForm" action="seat_reservation.php" method="post">
+    <input type="hidden" id="selected_seat" name="selected_seat" value="">
     <br><br>
         <div align="center">
             <label for="seatname">請選擇想查詢的座位編號:</label>
             <br><br>
-            <select id="seatname" name="seatname" onchange="fetchReservation()">
+            <select id="seatname" name="seatname" onchange="fetchReservation();">
             <?php
                 // 获取所有座位名称
                 $seat_query = "SELECT Seat_Name FROM seat";
@@ -93,32 +97,45 @@ if (isset($_SESSION['account']) ) {
                 ?>
             </select>
         </div>
-
+       
         <div style="text-align: center;">
         <div id="reservation_info" style="display: inline-block; text-align: center; margin-top: 20px;"></div>
         </div>
 
     <br><br>
         <div align="center">
-            <input type="submit" value="查詢可預約座位" style="width:30%;height: 40px;">
+        
+        <input type="button" value="預約所選座位" onclick="setSelectedSeatAndSubmit()">
         </div>
     </div>
 </form>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        function fetchReservation() {
-            var selectedSeat = $("#seatname").val();
+<script>
+function fetchReservation() {
+        var selectedSeat = $("#seatname").val();
 
-            $.ajax({
-                type: "POST",
-                url: "fetch_reservation.php",
-                data: { seatname: selectedSeat },
-                success: function(response) {
-                    $('#reservation_info').html(response);
-                }
-            });
-        }
-    </script>
+        // 将选定的座位名赋给隐藏字段
+        //$("#selected_seat").val(selectedSeat);
+
+        $.ajax({
+            type: "POST",
+            url: "fetch_reservation.php",
+            data: { seatname: selectedSeat },
+            success: function(response) {
+                $('#reservation_info').html(response);
+            }
+        });
+}
+function setSelectedSeatAndSubmit() {
+    var selectedSeat = $("#seatname").val();
+
+    // 将选定的座位名赋给隐藏字段
+    $("#selected_seat").val(selectedSeat);
+
+    // 提交表单
+    document.getElementById("reservationForm").submit();
+}
+</script>
 </body>
 </html>
