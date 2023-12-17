@@ -126,7 +126,35 @@ function redirectToSelectSeat() {
     form.submit();
 }
 
+    // 獲取開始時間和結束時間的 input 元素
+    var startTimeInput = document.getElementById('starttime');
+    var endTimeInput = document.getElementById('endtime');
 
+    // 當結束時間改變時執行驗證
+    endTimeInput.addEventListener('change', function() {
+        // 獲取開始時間和結束時間的值
+        var startTimeValue = new Date(startTimeInput.value);
+        var endTimeValue = new Date(endTimeInput.value);
+
+        // 驗證結束時間不早於開始時間
+        if (endTimeValue < startTimeValue) {
+            alert('結束時間不能早於開始時間');
+            endTimeInput.value = ''; // 清空結束時間欄位
+        }
+    });
+
+    // 當開始時間改變時執行驗證
+    startTimeInput.addEventListener('change', function() {
+        // 獲取開始時間和結束時間的值
+        var startTimeValue = new Date(startTimeInput.value);
+        var endTimeValue = new Date(endTimeInput.value);
+
+        // 驗證開始時間不晚於結束時間
+        if (startTimeValue > endTimeValue) {
+            alert('開始時間不能晚於結束時間');
+            startTimeInput.value = ''; // 清空開始時間欄位
+        }
+    });
 </script>
 
 </head>
@@ -145,8 +173,47 @@ function redirectToSelectSeat() {
 
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
     <form id="reservationForm" class="form-signin" role="form" onsubmit="redirectToSelectSeat(); return false;">
-            <div align="center"><input type="datetime-local" class="form-control" require="require" name="starttime" placeholder="starttime"  style="width:30%;height: 40px;"></div><br>
-            <div align="center"><input type="datetime-local" class="form-control" require="require" name="endtime" placeholder="endtime"  style="width:30%;height: 40px;"></div><br>
+    <!-- 開始時間 -->
+    <div align="center">
+    <input type="datetime-local" class="form-control" required="required" name="starttime" id="starttime" placeholder="starttime" style="width:30%;height: 40px;">
+    </div>
+    <br>
+    <!-- 結束時間 -->
+    <div align="center">
+        <input type="datetime-local" class="form-control" required="required" name="endtime" id="endtime" placeholder="endtime" style="width:30%;height: 40px;">
+    </div>
+    <script>
+            // 獲取開始時間和結束時間的 input 元素
+            var startTimeInput = document.getElementById('starttime');
+            var endTimeInput = document.getElementById('endtime');
+
+            // 當結束時間改變時執行驗證
+            endTimeInput.addEventListener('change', function() {
+                // 獲取開始時間和結束時間的值
+                var startTimeValue = new Date(startTimeInput.value);
+                var endTimeValue = new Date(endTimeInput.value);
+
+                // 驗證結束時間不早於開始時間
+                if (endTimeValue < startTimeValue) {
+                    alert('結束時間不能早於開始時間');
+                    endTimeInput.value = ''; // 清空結束時間欄位
+                }
+            });
+
+            // 當開始時間改變時執行驗證
+            startTimeInput.addEventListener('change', function() {
+                // 獲取開始時間和結束時間的值
+                var startTimeValue = new Date(startTimeInput.value);
+                var endTimeValue = new Date(endTimeInput.value);
+
+                // 驗證開始時間不晚於結束時間
+                if (startTimeValue > endTimeValue) {
+                    alert('開始時間不能晚於結束時間');
+                    startTimeInput.value = ''; // 清空開始時間欄位
+                }
+            });
+            </script>
+    <br>
             <div align="center"><input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
             <div align="center"><input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
             <!-- 前面的代码保持不变 -->
