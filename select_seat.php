@@ -124,12 +124,13 @@ if (isset($_SESSION['account'])) {
 $filtered_seats_query = "SELECT s.Seat_Name 
                         FROM seat s
                         LEFT JOIN reservation r ON s.Seat_Id = r.Seat_Id 
-                            AND ('$start_time' BETWEEN r.Start_Time AND r.End_Time 
-                                OR '$end_time' BETWEEN r.Start_Time AND r.End_Time
-                                OR r.Start_Time BETWEEN '$start_time' AND '$end_time'
-                                OR r.End_Time BETWEEN '$start_time' AND '$end_time')
+                            AND ('$start_time' >= r.Start_Time AND '$start_time' < r.End_Time
+                                OR '$end_time' > r.Start_Time AND '$end_time' <= r.End_Time
+                                OR r.Start_Time >= '$start_time' AND r.Start_Time < '$end_time'
+                                OR r.End_Time > '$start_time' AND r.End_Time <= '$end_time')
                         WHERE s.Seat_Floor = '$seatfloor' AND s.Socket = '$socket'
                             AND r.Seat_Id IS NULL";
+
 
 $filtered_seats_result = $conn->query($filtered_seats_query);
 
