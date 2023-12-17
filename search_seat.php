@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -60,9 +60,9 @@ if (isset($_POST['seatname'])) {
 </head>
 <body> 
 <div class="navbar">
-    <a href="userstatus.php">會員</a>
-    <a href="seat.php">座位一覽</a>
-    <a href="user_reservation.php">預約紀錄</a>
+    <a href="../userstatus.php">會員</a>
+    <a href="../seat/seat.php">座位一覽</a>
+    <a href="reservation.php">預約紀錄</a>
     <a href="user_new_reservation.php">預約座位</a>
     <a href="search_seat.php">查詢座位</a>
     
@@ -111,29 +111,36 @@ if (isset($_POST['seatname'])) {
 </form>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-function fetchReservation() {
-        var selectedSeat = $("#seatname").val();
+// 在页面加载时执行的函数
+$(document).ready(function() {
+    // 默认选定座位 A1 并获取其预约信息并显示
+    var defaultSeat = "A1";
+    displayReservationInfo(defaultSeat);
 
-        // 将选定的座位名赋给隐藏字段
-        //$("#selected_seat").val(selectedSeat);
+    // 当座位选择改变时，获取并显示对应座位的预约信息
+    $("#seatname").change(function() {
+        var selectedSeat = $(this).val();
+        displayReservationInfo(selectedSeat);
+    });
+});
 
-        $.ajax({
-            type: "POST",
-            url: "fetch_reservation.php",
-            data: { seatname: selectedSeat },
-            success: function(response) {
-                $('#reservation_info').html(response);
-            }
-        });
+// 获取并显示座位的预约信息
+function displayReservationInfo(seat) {
+    $.ajax({
+        type: "POST",
+        url: "fetch_reservation.php",
+        data: { seatname: seat },
+        success: function(response) {
+            $('#reservation_info').html(response);
+        }
+    });
 }
+
 function setSelectedSeatAndSubmit() {
     var selectedSeat = $("#seatname").val();
-
-    // 将选定的座位名赋给隐藏字段
     $("#selected_seat").val(selectedSeat);
-
-    // 提交表单
     document.getElementById("reservationForm").submit();
 }
 </script>
