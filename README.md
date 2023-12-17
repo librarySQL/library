@@ -18,3 +18,6 @@
 - 座位沒預約紀錄會**顯示尚未被預約**
 ### [fetch_reservation](https://github.com/librarySQL/library/blob/main/fetch_reservation.php)
 - 將被選擇的座位的預約紀錄給顯示出來回傳到search_seat的頁面上做顯示
+### [search_seat.php(瑜珈)](https://github.com/librarySQL/library/blob/main/search_seat.php(瑜珈))
+- 只列出使用者進行查詢當下那個時間以後的預約紀錄(過期的對使用者不重要的就不會顯示出來)
+- 有個bug我一直修不好，下拉清單選的座位編號在按下確認之後會跳回預設值
