@@ -165,6 +165,8 @@ if (isset($_POST['selected_seat'])) {
                 $start_time = $_POST['starttime'];
                 $end_time = $_POST['endtime'];
                 $seat_name = $_POST['seatname'];
+                $seatfloor=$_POST['seatfloor'];
+                $socket=$_POST['socket'];
             // Fetch User_Id based on the current user's account
             $user_query = "SELECT User_Id FROM user WHERE User_Account = ?";
             $stmt = $conn->prepare($user_query);
@@ -190,20 +192,38 @@ if (isset($_POST['selected_seat'])) {
                     if (isset($start_time) && isset($end_time)) {
                         $start_time = $_POST['starttime'];
                         $end_time = $_POST['endtime'];
-                        
-                        $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id) VALUES (?, ?, ?, ?)";
-                        $stmt = $conn->prepare($insert_query);
-                        $stmt->bind_param("ssii", $start_time, $end_time, $user_id, $seat_id);
-            
-                        if ($stmt->execute()) {
-                            echo '<script>alert("您預約成功了！");</script>';
-                            echo '<script>window.location.href = "user_reservation.php";</script>';
+
+                        $check_duplicate_query = "SELECT * FROM reservation WHERE Start_Time = ? AND End_Time = ? AND Seat_Id = ?";
+                        $stmt = $conn->prepare($check_duplicate_query);
+                        $stmt->bind_param("ssi", $start_time, $end_time, $seat_id);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                
+                        if ($result->num_rows > 0) {
+                            echo '<script>alert("預約錯誤！請重新預約。");</script>';
+                            echo '<script>';
+                            echo 'document.getElementById("starttime").value = "";'; // 清空開始時間
+                            echo 'document.getElementById("endtime").value = "";'; // 清空結束時間
+                            
+                            echo '</script>';
                         } else {
-                            echo "發生錯誤: " . $stmt->error;
+                            $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id) VALUES (?, ?, ?, ?)";
+                            $stmt = $conn->prepare($insert_query);
+                            $stmt->bind_param("ssii", $start_time, $end_time, $user_id, $seat_id);
+                
+                            if ($stmt->execute()) {
+                                echo '<script>alert("您預約成功了！");</script>';
+                                echo '<script>window.location.href = "user_reservation.php";</script>';
+                            } else {
+                                echo "發生錯誤: " . $stmt->error;
+                            }
                         }
                     } else {
-                        echo "請輸入開始時間和結束時間";
+                        echo  '<script>alert("請輸入開始時間和結束時間");</script>';
                     }
+                    echo "<script>document.getElementById('seatname').value = '$seat_name';</script>";
+                            echo "<script>document.getElementById('seatfloor').value = '$seatfloor';</script>";
+                            echo "<script>document.getElementById('socket').value = '$socket';</script>";
                 } else {
                     echo "找不到相應的座位名稱";
                 }
@@ -211,7 +231,7 @@ if (isset($_POST['selected_seat'])) {
                 echo "找不到相應的使用者帳號";
             }
         } else {
-            echo "<br><br>"."請輸入開始時間和結束時間";
+            echo  '<script>alert("請輸入開始時間和結束時間");</script>';
         }
             
         }
