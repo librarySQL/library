@@ -25,3 +25,6 @@
 ### [search_seat.php(瑜珈)](https://github.com/librarySQL/library/blob/main/search_seat.php(瑜珈))
 - 只列出使用者進行查詢當下那個時間以後的預約紀錄(過期的對使用者不重要的就不會顯示出來)
 - 有個bug我一直修不好，下拉清單選的座位編號在按下確認之後會跳回預設值
+### [seatedit](https://github.com/librarySQL/library/blob/main/seatedit.php)
+- 管理者登入後可以編輯、刪除、新增座位
+- 此頁面是列出所有的座位清單還有三個功能的按鈕
