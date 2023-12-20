@@ -1,6 +1,5 @@
-//先去db的user資料表加入isManager 型態TINYINT 長度設1          (true=1 false=0)
-//第38行的ex.php是管理者登入後看到的頁面(還沒做)
-
+<!--先去db的user資料表加入isManager 型態TINYINT 長度設1          (true=1 false=0)
+第38行的ex.php是管理者登入後看到的頁面(還沒做)-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +14,7 @@ $msg = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") { 
     // 处理 POST 请求
-    $con = new mysqli("localhost", "root", "jenny104408!","libdb");
+    $con = new mysqli("localhost", "root", "eva65348642","librarydb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -34,8 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Check if the user is a manager
             if ($row['isManager'] == 1) {
                 $_SESSION['isManager'] = true;
+                $_SESSION['userid'] = $row['User_Id'];
+                $_SESSION['account'] = $row['User_Account'];
+                $_SESSION['password'] = $row['User_Password'];
                 // Redirect to user.php if the user is a manager
-                header("Location: ex.php");
+                header("Location: seat/seatedit.php");
                 exit;
             }
 
@@ -43,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['userid'] = $row['User_Id'];
             $_SESSION['account'] = $row['User_Account'];
             $_SESSION['password'] = $row['User_Password'];
-            header("Location: ../reservation/newreservation.php");
+            header("Location: reservation/user_new_reservation.php");
             exit;
         } else {
             $msg = "Wrong account or password!";
