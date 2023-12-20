@@ -93,7 +93,7 @@ if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 
-$seat = $con->query("SELECT * FROM seat");
+$seat = $con->query("SELECT Seat_ID, Seat_Name, Seat_Floor, Socket FROM seat");
 
 echo "<table>
     <tr>
@@ -108,14 +108,25 @@ while ($row = mysqli_fetch_array($seat)) {
     echo "<td>" . $row['Seat_Name'] . "</td>";
     echo "<td>" . $row['Seat_Floor'] . "</td>";
     echo "<td>" . $row['Socket'] . "</td>";
-    echo "<td><button onclick='location.href=\"seatedit.php?id=" . $row['Seat_Name'] . "\"'>編輯</button>
-    <button onclick='location.href=\"seatdelete.php?id=" . $row['Seat_Name'] . "\"'>刪除</button></td>"; 
-    echo "</tr>";
+    echo "<td> 
+    <button onclick=\"location.href='seatedit.php?id=" . $row['Seat_ID'] . "'\">編輯</button>
+    <button onclick=\"deleteSeat('" . $row['Seat_ID'] . "')\">刪除</button> </td>";
     echo "</tr>";
 }
 
 echo "</table>";
+echo "<script>
+function deleteSeat(seatID) {
+    var deleteConfirmation = confirm('是否要刪除此座位？');
 
+    if (deleteConfirmation) {
+        var deletePageUrl = 'seatdelete.php?id=' + seatID;
+        window.location.href = deletePageUrl;
+    } else {
+        // 用户取消删除操作，不执行任何操作
+    }
+}
+</script>";
 $con->close();
 ?>
 
