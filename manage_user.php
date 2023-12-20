@@ -1,4 +1,4 @@
-//edit還沒做
+//edit和新增還沒做
 
 
 <!DOCTYPE html>
@@ -115,6 +115,17 @@ $con->close();
             }
         }
    
+
+
+    /*function redirectToDeletePage(userId) {
+            var deleteConfirmation = confirm('是否要取消此訂單？');
+            if (deleteConfirmation) {
+                var deletePageUrl = 'reservationdelete.php' + '?userId=' + encodeURIComponent(userId);
+                window.location.href = deletePageUrl;
+            } else {
+                // User chose to cancel, do nothing
+            }
+        }*/
 </script>
 </body>
 </html>
