@@ -108,8 +108,8 @@ while ($row = mysqli_fetch_array($seat)) {
     echo "<td>" . $row['Seat_Name'] . "</td>";
     echo "<td>" . $row['Seat_Floor'] . "</td>";
     echo "<td>" . $row['Socket'] . "</td>";
-    echo "<td><button onclick='location.href=\"edit_seat.php?id=" . $row['Seat_Name'] . "\"'>編輯</button>
-    <button onclick='location.href=\"delete_seat.php?id=" . $row['Seat_Name'] . "\"'>刪除</button></td>"; 
+    echo "<td><button onclick='location.href=\"seatedit.php?id=" . $row['Seat_Name'] . "\"'>編輯</button>
+    <button onclick='location.href=\"seatdelete.php?id=" . $row['Seat_Name'] . "\"'>刪除</button></td>"; 
     echo "</tr>";
     echo "</tr>";
 }
