@@ -30,3 +30,8 @@
 - 此頁面是列出所有的座位清單還有三個功能的按鈕
 - 刪除做好了
 - 剩新增和編輯
+### [manage_user](https://github.com/librarySQL/library/blob/main/manage_user.php)
+- 新增和編輯還沒做
+- 目前只做了delete
+### [manage_userdelete](https://github.com/librarySQL/library/blob/main/manage_userdelete.php)
+- 刪除會員帳號資料
