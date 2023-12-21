@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 if (isset($_GET['seatId']) && isset($_GET['seatName']) && isset($_GET['seatFloor']) && isset($_GET['socket'])) {
     // 获取 GET 参数
     $seatId = $_GET['seatId'];
@@ -9,7 +8,8 @@ if (isset($_GET['seatId']) && isset($_GET['seatName']) && isset($_GET['seatFloor
     $socket = $_GET['socket'];
 } else {
     // 如果未传递参数，您可以在此处设置默认值或采取其他适当措施
-    $seatId = '';
+    echo "23";
+    $seatId = isset($seatId) ? $seatId : '';
     $seatname = '';
     $seatfloor = '';
     $socket = '';
@@ -35,10 +35,12 @@ if (isset($_SESSION['account'])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         // 获取默认值
+        $seatId = $row['Seat_Id'];
         $seatname = $row['Seat_Name'];
         $seatfloor = $row['Seat_Floor'];
         $socket = $row['Socket'];
     } else {
+        echo "1";
         echo "No seat found for the given ID.";
         exit; // 如果找不到，终止程序
     }
@@ -47,6 +49,7 @@ if (isset($_SESSION['account'])) {
         // 如果是 POST 请求，检查是否存在 seatId，并从 POST 数据中获取其值
         if (isset($_POST['seatId'])) {
             $seatId = $_POST['seatId'];
+            echo $seatId;
 
             // 只更新座位信息
             $seatname = $_POST['Seat_Name'];
@@ -62,7 +65,7 @@ if (isset($_SESSION['account'])) {
                 if ($result === TRUE && $con->affected_rows > 0) { 
                     ?>
                     <script language="javascript">
-                        alert('预约数据修改完成！');
+                        alert('預約資料修改完成！');
                         location.href="seatdetail.php";
                     </script>
                     <?php 
@@ -92,7 +95,8 @@ if (isset($_SESSION['account'])) {
     <h1>Edit Seat Data</h1>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <!-- 座位编号 -->
-        <input type="hidden" name="seatId" value="<?php echo $seatId; ?>">
+        <label for="Seat_Id">座位Id:</label>
+        <input type="text" id="Seat_Id" name="Seat_Id" value="<?php echo $seatId; ?>" readonly><br><br>
         <!-- 座位名称 -->
         <label for="Seat_Name">座位名稱:</label>
         <input type="text" id="Seat_Name" name="Seat_Name" value="<?php echo $seatname; ?>" required><br><br>
