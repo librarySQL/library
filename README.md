@@ -39,8 +39,7 @@
 - 管理者編輯座位(尚未完成：無法順利編輯完成)
 ### [manage_user](https://github.com/librarySQL/library/blob/main/manage_user.php)
 - 編輯還沒做
-- 做完新增之後delete不知道為甚麼突然不能刪了
 ### [manage_userdelete](https://github.com/librarySQL/library/blob/main/manage_userdelete.php)
-- 刪除會員帳號資料(原本可以改一改突然壞掉)
+- 刪除會員帳號資料
 ### [manage_usercreate](https://github.com/librarySQL/library/blob/main/manage_usercreate.php)
 - userId自動填入的功能還沒做，但可以成功新增
