@@ -42,4 +42,4 @@
 ### [manage_userdelete](https://github.com/librarySQL/library/blob/main/manage_userdelete.php)
 - 刪除會員帳號資料
 ### [manage_usercreate](https://github.com/librarySQL/library/blob/main/manage_usercreate.php)
-- userId自動填入的功能還沒做，但可以成功新增
+- 新增user or manager
