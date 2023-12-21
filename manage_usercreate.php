@@ -40,42 +40,53 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['isManager']) || $_SESSION['isManager'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
 $con = new mysqli("localhost", "root", "jenny104408!", "libdb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
+$query = "SELECT MAX(User_Id) AS maxUserId FROM user";
+$result = $con->query($query);
+
+
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $nextUserId = $row['maxUserId'] + 1;
+} else {
+    // Default to 1 if no existing users
+    $nextUserId = 1;
+}
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = mysqli_real_escape_string($con, $_POST["userId"]);
     $userAccount = mysqli_real_escape_string($con, $_POST["userAccount"]);
     $userPassword = mysqli_real_escape_string($con, $_POST["userPassword"]);
-    $numberOfviolation = isset($_POST["numberOfviolation"]) ? mysqli_real_escape_string($con, $_POST["numberOfviolation"]) : null;
+    $numberOfViolation = isset($_POST["numberOfViolation"]) ? mysqli_real_escape_string($con, $_POST["numberOfViolation"]) : null;
     $suspension = isset($_POST["suspension"]) ? mysqli_real_escape_string($con, $_POST["suspension"]) : null;
     $isManager = mysqli_real_escape_string($con, $_POST["isManager"]);
 
     // Set to NULL if empty
-    $numberOfviolation = $numberOfviolation !== '' ? $numberOfviolation : null;
+    $numberOfViolation = $numberOfViolation !== '' ? $numberOfViolation : null;
     $suspension = $suspension !== '' ? $suspension : null;
 
     $insertSql = "INSERT INTO user (User_Id, User_Account, User_Password, Number_of_Violation, Suspension, isManager) 
                   VALUES ('$userId', '$userAccount', '$userPassword', ";
-    $insertSql .= $numberOfviolation !== null ? "'$numberOfviolation'" : "NULL";
+    $insertSql .= $numberOfViolation !== null ? "'$numberOfViolation'" : "NULL";
     $insertSql .= ", ";
     $insertSql .= $suspension !== null ? "'$suspension'" : "NULL";
     $insertSql .= ", '$isManager')";
 
     if ($con->query($insertSql) === TRUE) {
-        echo "新用户添加成功。";
+        // Redirect to manage_user.php
+        header("Location: ../manager/manage_user.php");
+        exit;
     } else {
         echo "错误：" . $insertSql . "<br>" . $con->error;
     }
 }
+
 
 echo 
 "<div class='navbar'>
@@ -94,7 +105,7 @@ echo
 <div style="text-align: center; margin-top: 20px;">
     <form method="post" action="">
         <label for="userId" style="text-align: left; display: inline-block; width: 100px;">UserId：</label>
-        <input type="text" id="userId" name="userId" required style="margin-bottom: 10px;"><br>
+		<input type="text" id="userId" name="userId" value="<?php echo $nextUserId; ?>" readonly style="margin-bottom: 10px;"><br>
 
         <label for="userAccount" style="text-align: left; display: inline-block; width: 100px;">帳號：</label>
         <input type="text" id="userAccount" name="userAccount" required style="margin-bottom: 10px;"><br>
