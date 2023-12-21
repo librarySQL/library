@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Check if the user is a manager
             if ($row['isManager'] == 1) {
+                $_SESSION['login'] = true;
                 $_SESSION['isManager'] = true;
                 $_SESSION['userid'] = $row['User_Id'];
                 $_SESSION['account'] = $row['User_Account'];
