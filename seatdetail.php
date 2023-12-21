@@ -10,9 +10,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
 // 显示用户帐户信息
 if (isset($_SESSION['account']) ) {
     $userId = $_SESSION['account'];
-    //$suspention=$_SESSION['suspention'];
-    // 这里你可以使用 $userId 查询数据库或其他存储来获取用户信息
-    // 在这个示例中，我们仅显示 "account 您好！" 的消息
+    
     $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
     //$Msg="您以違規".$_SESSION['suspention']."次!";
 } else {
@@ -75,16 +73,13 @@ if (isset($_SESSION['account']) ) {
 </head>
 <body>
 <div class="navbar">
-    <a href="../userstatus.php">會員</a>
-    <a href="seat.php">座位一覽</a>
-    <a href="../reservation/reservation.php">預約紀錄</a>
-    <a href="../reservation/user_new_reservation.php">預約座位</a>
-    <a href="search_seat.php">查詢座位</a>
+    <a href="../userstatus.php">使用者名單</a>
+    <a href="seatdetail.php">座位狀況</a>
     <!-- 登入、登出 -->
     <a href="logout.php" style="float:right;">登出</a>
     <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
 </div>
-<button class="add-button" onclick="location.href='add_seat.php'" style="float:left; margin: 20px;">新增座位</button>
+<button class="add-button" onclick="location.href='newseat.php'" style="float:left; margin: 20px;">新增座位</button>
 <?php
 
 $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
@@ -93,7 +88,8 @@ if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 
-$seat = $con->query("SELECT Seat_ID, Seat_Name, Seat_Floor, Socket FROM seat");
+ $seat = $con->query("SELECT Seat_ID, Seat_Name, Seat_Floor, Socket FROM seat");
+
 
 echo "<table>
     <tr>
@@ -103,19 +99,26 @@ echo "<table>
         <th>更新</th>
     </tr>";
 
-while ($row = mysqli_fetch_array($seat)) {
-    echo "<tr>";
-    echo "<td>" . $row['Seat_Name'] . "</td>";
-    echo "<td>" . $row['Seat_Floor'] . "</td>";
-    echo "<td>" . $row['Socket'] . "</td>";
-    echo "<td> 
-    <button onclick=\"location.href='seatedit.php?id=" . $row['Seat_ID'] . "'\">編輯</button>
-    <button onclick=\"deleteSeat('" . $row['Seat_ID'] . "')\">刪除</button> </td>";
-    echo "</tr>";
-}
+    while ($row = mysqli_fetch_array($seat)) {
+        echo "<tr>";
+        echo "<td>" . $row['Seat_Name'] . "</td>";
+        echo "<td>" . $row['Seat_Floor'] . "</td>";
+        echo "<td>" . $row['Socket'] . "</td>";
+        echo "<td> 
+        <button onclick=\"redirectToEditPage('". $row['Seat_ID']."', '".$row['Seat_Name']."','".$row['Seat_Floor']."', '".$row['Socket']."')\">編輯</button>
+
+        <button onclick=\"deleteSeat('{$row['Seat_ID']}')\">刪除</button> </td>";
+        echo "</tr>";
+    }
+    
 
 echo "</table>";
 echo "<script>
+function redirectToEditPage(seatId, seatName, seatFloor, socket) {
+    var editPageUrl = 'seatedit.php' + '?seatId=' + encodeURIComponent(seatId) + '&seatName=' + encodeURIComponent(seatName) + '&seatFloor=' + encodeURIComponent(seatFloor) + '&socket=' + encodeURIComponent(socket);
+    window.location.href = editPageUrl;
+}
+
 function deleteSeat(seatID) {
     var deleteConfirmation = confirm('是否要刪除此座位？');
 
