@@ -61,12 +61,23 @@
 session_start();
 
 // Check if the user is not logged in or not a manager
-if (!isset($_SESSION['isManager']) || $_SESSION['isManager'] !== true) {
-    // Redirect non-managers to the login page
+if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header("Location: login.php");
     exit;
 }
 
+if (isset($_SESSION['account']) ) {
+    $userId = $_SESSION['account'];
+    //$suspention=$_SESSION['suspention'];
+    // 这里你可以使用 $userId 查询数据库或其他存储来获取用户信息
+    // 在这个示例中，我们仅显示 "account 您好！" 的消息
+    //$accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
+    //$Msg="您以違規".$_SESSION['suspention']."次!";
+} else {
+    // 如果未找到用户ID，可能需要再次重定向到登录页面或者显示错误信息
+    header("Location: login.php");
+    exit;
+}
 
 $con = new mysqli("localhost", "root", "jenny104408!", "libdb");
 
@@ -109,7 +120,7 @@ if ($result && $result->num_rows > 0) {
         echo "<td>{$row['Suspension']}</td>";
         echo "<td>" . ($row['isManager'] == 1 ? '是' : '否') . "</td>";
         echo "<td>
-        <button onclick='editUser({$row['User_Id']})'>編輯</button>
+        <button onclick=\"redirectToEditPage('" . $row['User_Id'] . "', '" . $row['User_Account'] . "', '" . $row['User_Password'] . "', '" . $row['Number_of_Violation'] . "', '" . $row['Suspension']. "', '" . $row['isManager'] . "')\">編輯</button>
         <button onclick=\"redirectToDeletePage('" . $row['User_Id'] . "')\">刪除</button>
         </td>";
         echo "</tr>";
@@ -123,10 +134,10 @@ if ($result && $result->num_rows > 0) {
 $con->close();
 ?>
 <script>
-    function editUser(userId) {
-        // Redirect to manage_useredit.php with the user ID
-        window.location.href = 'manage_useredit.php?userId=' + userId;
-    }
+    function redirectToEditPage(userId, account, password, numberOfviolation, suspension, isManager) {
+            var editPageUrl = 'manage_useredit.php' + '?userId=' + encodeURIComponent(userId) + '&account=' + encodeURIComponent(account) + '&password=' + encodeURIComponent(password) + '&numberOfviolation=' + encodeURIComponent(numberOfviolation) + '&suspension=' + encodeURIComponent(suspension) + '&isManager=' + encodeURIComponent(isManager);
+            window.location.href = editPageUrl;
+        }
 	 function redirectToDeletePage(userId) {
             var deleteConfirmation = confirm('是否刪除此帳號？');
             if (deleteConfirmation) {
