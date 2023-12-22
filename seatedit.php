@@ -1,25 +1,37 @@
 <?php
 session_start();
-if (isset($_GET['seatId']) && isset($_GET['seatName']) && isset($_GET['seatFloor']) && isset($_GET['socket'])) {
-    // 获取 GET 参数
-    $seatId = $_GET['seatId'];
-    $seatname = $_GET['seatName'];
-    $seatfloor = $_GET['seatFloor'];
-    $socket = $_GET['socket'];
-} else {
-    // 如果未传递参数，您可以在此处设置默认值或采取其他适当措施
-    echo "23";
-    $seatId = isset($seatId) ? $seatId : '';
-    $seatname = '';
-    $seatfloor = '';
-    $socket = '';
-}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // 通过 POST 提交
+    $seatId = $_POST['Seat_Id'];
+    $seatName = $_POST['Seat_Name'];
+    $seatFloor = $_POST['Seat_Floor'];
+    $socket = $_POST['Socket'];
+  
+  } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  
+    // 通过 GET 方式访问
+    if (isset($_GET['seatId']) && isset($_GET['seatName']) && isset($_GET['seatFloor']) && isset($_GET['socket'])) {
+      $seatId = $_GET['seatId'];
+      $seatname = $_GET['seatName'];
+      $seatfloor = $_GET['seatFloor'];
+      $socket = $_GET['socket'];
+  
+    } else {
+      // 设置默认值
+      $seatId = '';
+      $seatname = '';
+      $seatfloor = '';
+      $socket = '';
+    }
+  
+  }
 
 if (isset($_SESSION['account'])) {
     // 检查用户是否登录
     $useraccount = $_SESSION['account'];
     $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
-    $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+    $con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -40,16 +52,16 @@ if (isset($_SESSION['account'])) {
         $seatfloor = $row['Seat_Floor'];
         $socket = $row['Socket'];
     } else {
-        echo "1";
+        
         echo "No seat found for the given ID.";
         exit; // 如果找不到，终止程序
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 如果是 POST 请求，检查是否存在 seatId，并从 POST 数据中获取其值
-        if (isset($_POST['seatId'])) {
-            $seatId = $_POST['seatId'];
-            echo $seatId;
+        if (isset($_POST['Seat_Id'])) {
+            $seatId = $_POST['Seat_Id'];
+            //echo $seatId;
 
             // 只更新座位信息
             $seatname = $_POST['Seat_Name'];
@@ -64,11 +76,14 @@ if (isset($_SESSION['account'])) {
 
                 if ($result === TRUE && $con->affected_rows > 0) { 
                     ?>
+       
                     <script language="javascript">
                         alert('預約資料修改完成！');
-                        location.href="seatdetail.php";
+                        location.href="allseat.php";
                     </script>
+                    
                     <?php 
+                    echo"成功!";
                 } else {
                     echo "Error updating record: " . $con->error;
                 }
