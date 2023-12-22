@@ -1,10 +1,27 @@
-//edit還沒做
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <style>
+	 .add-button {
+        background-color: #4682B4; 
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 20px;
+        cursor: pointer;
+        transition-duration: 0.4s;
+    }
+
+    .add-button:hover {
+        background-color: white;
+        color: black;
+        border: 1px solid #4CAF50; /* 綠色 */
+    }
         /* Navbar 樣式 */
         .navbar {
             overflow: hidden;
@@ -67,7 +84,7 @@ $result = $con->query($sql);
 echo 
 "<div class='navbar'>
     <a href='../manager/manage_user.php'>使用者</a>
-	<a href='../manager/manage_usercreate.php'>新增使用者</a> 
+	 
    
     <!-- 登入、登出 -->
     <a href='../logout/logout.php' style='float:right;'>登出</a>
@@ -75,6 +92,7 @@ echo
     
     <!-- 可以加入其他需要的連結 -->
 </div>";
+echo "<button class='add-button' onclick=\"location.href='../manager/manage_usercreate.php'\" style='float:left; margin: 20px;'>新增使用者</button>";
 
 
 if ($result && $result->num_rows > 0) {
