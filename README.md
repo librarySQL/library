@@ -1,4 +1,7 @@
 ﻿# library
+### [userstatus](https://github.com/librarySQL/library/blob/main/userstatus.php)
+- 使用者身分狀態
+- 可以編輯帳號密碼
 ### [reservation](https://github.com/librarySQL/library/blob/main/reservation.php)
 - 使用者的預約紀錄
 ### [seat](https://github.com/librarySQL/library/blob/main/seat.php)
