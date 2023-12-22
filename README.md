@@ -36,7 +36,7 @@
 ### [seatdelete](https://github.com/librarySQL/library/blob/main/seatdelete.php)
 - 管理者刪除座位
 ### [seatedit](https://github.com/librarySQL/library/blob/main/seatedit.php)
-- 管理者編輯座位(尚未完成：無法順利編輯完成)
+- 管理者編輯座位
 ### [manage_user](https://github.com/librarySQL/library/blob/main/manage_user.php)
 - 編輯還沒做
 ### [manage_userdelete](https://github.com/librarySQL/library/blob/main/manage_userdelete.php)
