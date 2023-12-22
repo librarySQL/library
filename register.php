@@ -19,7 +19,7 @@ if (isset($_POST['register']) && !empty($_POST['account']) && !empty($_POST['pas
 
     $account = $_POST['account'];
     $password = $_POST['password'];
-
+    
 
     $sql = "SELECT * FROM user WHERE User_Account='$account'";
     $result = $con->query($sql);
@@ -33,14 +33,16 @@ if (isset($_POST['register']) && !empty($_POST['account']) && !empty($_POST['pas
     }
 
     if (!$duplicate) {
-       $newuser = "INSERT INTO user (User_Account, User_Password, isManager) 
+        $newuser = "INSERT INTO user (User_Account, User_Password, isManager) 
         VALUES ('$account', '$password', 0)";
 
-        if ($con->query($newuser) === TRUE) {
-            $mes = "新增成功";
-        } else {
-            $mes = "Error: " . $newuser . "<br>" . $con->error;
-        }
+if ($con->query($newuser) === TRUE) {
+    echo '<script>alert("註冊成功，將為您導回登入畫面！"); window.location.href = "login.php";</script>';
+    exit; // 確保後續的代碼不會被執行
+} else {
+    $mes = "Error: " . $newuser . "<br>" . $con->error;
+}
+
     } else {
         $mes = "該帳號已存在";
     }
