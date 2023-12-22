@@ -33,8 +33,8 @@ if (isset($_POST['register']) && !empty($_POST['account']) && !empty($_POST['pas
     }
 
     if (!$duplicate) {
-        $newuser = "INSERT INTO user(User_Account, User_Password)
-                        VALUES ('$account', '$password')";
+       $newuser = "INSERT INTO user (User_Account, User_Password, isManager) 
+        VALUES ('$account', '$password', 0)";
 
         if ($con->query($newuser) === TRUE) {
             $mes = "新增成功";
