@@ -41,7 +41,7 @@
 ### [seatedit](https://github.com/librarySQL/library/blob/main/seatedit.php)
 - 管理者編輯座位
 ### [manage_user](https://github.com/librarySQL/library/blob/main/manage_user.php)
-- 編輯還沒做
+- 編輯在manage_useredit.php 目前一直失敗
 ### [manage_userdelete](https://github.com/librarySQL/library/blob/main/manage_userdelete.php)
 - 刪除會員帳號資料
 ### [manage_usercreate](https://github.com/librarySQL/library/blob/main/manage_usercreate.php)
