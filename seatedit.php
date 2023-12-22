@@ -78,7 +78,7 @@ if (isset($_SESSION['account'])) {
                     ?>
        
                     <script language="javascript">
-                        alert('預約資料修改完成！');
+                        alert('座位狀況修改完成！');
                         location.href="allseat.php";
                     </script>
                     
