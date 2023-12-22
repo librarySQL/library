@@ -34,6 +34,23 @@
             background-color: #f2f2f2;
         }
     </style>
+	
+	
+	 <script>
+        function validateForm() {
+            var isManagerValue = document.getElementById("isManager").value;
+
+            // Check if isManagerValue is not 0 or 1
+            if (isManagerValue !== "0" && isManagerValue !== "1") {
+                alert("是否為管理者？請輸入 1 （true）或 0（false）");
+                return false; // Prevent form submission
+            }
+
+            // If validation passes, allow form submission
+            return true;
+        }
+    </script>
+	
 </head>
 <body>
 
@@ -103,7 +120,7 @@ echo
 ?>
 
 <div style="text-align: center; margin-top: 20px;">
-    <form method="post" action="">
+    <form method="post" action="" onsubmit="return validateForm();">
         <label for="userId" style="text-align: left; display: inline-block; width: 100px;">UserId：</label>
 		<input type="text" id="userId" name="userId" value="<?php echo $nextUserId; ?>" readonly style="margin-bottom: 10px;"><br>
 
@@ -121,6 +138,7 @@ echo
 
 		<label for="isManager" style="text-align: left; display: inline-block; width: 100px;">管理者：</label>
         <input type="text" id="isManager" name="isManager" required style="margin-bottom: 20px;"><br>
+
         <!-- Add other input fields as needed -->
 
         <input type="submit" value="儲存">
