@@ -109,19 +109,22 @@
 </head>
 <body>
 <div class="navbar">
-<div class="navbar">
         <div class="dropdown">
             <button class="dropbtn">使用者</button>
             <div class="dropdown-content">
-                <a <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) echo 'class="active"'; ?> href="../user/manage_user.php">使用者名單</a>
-                <a <?php if (isset($_GET['type']) && $_GET['type'] === 'manager') echo 'class="active"'; ?> href="../user/manage_user.php?type=manager">管理者名單</a>
-            </div>
+            <a <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) echo 'class="active"'; ?> href="../user/manage_user.php">使用者名單</a>
+            <a <?php if (isset($_GET['type']) && $_GET['type'] === 'manager') echo 'class="active"'; ?> href="../user/manage_user.php?type=manager">管理者名單</a>
+            <!-- 新增使用者按鈕 -->
+            <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) : ?>
+            <?php endif; ?>
         </div>
-    
+    </div>
+
         <a href="../seat/seatdetail.php">座位狀況</a>
         <!-- 登入、登出 -->
         <a href="../logout.php" style="float:right;">登出</a>
     </div>
+    <button class='add-button' onclick="location.href='../user/manage_usercreate.php'" style='float:left; margin: 20px;'>新增使用者</button>
 </div>
 <?php
     session_start();
@@ -159,6 +162,7 @@
     }
 
     $result = $con->query($sql);
+    
 
     if ($result && $result->num_rows > 0) {
         echo "<table border='1'>";
