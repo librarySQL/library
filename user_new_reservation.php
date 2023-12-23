@@ -170,7 +170,7 @@ function redirectToSelectSeat() {
    
     <!-- 可以加入其他需要的連結 -->
 </div>
-
+<br><br>
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
     <form id="reservationForm" class="form-signin" role="form" onsubmit="redirectToSelectSeat(); return false;">
     <!-- 開始時間 -->
