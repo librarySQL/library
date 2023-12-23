@@ -92,7 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <!-- 表單 -->
-    <h1>Edit User Data</h1>
+    <h1 style="text-align: center;">Edit User Data</h1>
+    <div style="text-align: center; margin-top: 20px;">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <!-- 使用者编号 -->
         <label for="User_Id">UserId:</label>
@@ -120,5 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- 提交按钮 -->
         <input type="submit" value="儲存修改">
     </form>
+</div>
 </body>
 </html>
