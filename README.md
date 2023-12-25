@@ -41,7 +41,9 @@
 ### [seatedit](https://github.com/librarySQL/library/blob/main/seatedit.php)
 - 管理者編輯座位
 ### [manage_user](https://github.com/librarySQL/library/blob/main/manage_user.php)
-- 編輯在manage_useredit.php 目前一直失敗
+- 編輯使用者功能
+- 導覽列有下拉式選單，分為使用者名單和管理者名單
+- 點選後會出現兩種不同的名單
 ### [manage_userdelete](https://github.com/librarySQL/library/blob/main/manage_userdelete.php)
 - 刪除會員帳號資料
 ### [manage_usercreate](https://github.com/librarySQL/library/blob/main/manage_usercreate.php)
