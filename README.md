@@ -48,3 +48,5 @@
 - 刪除會員帳號資料
 ### [manage_usercreate](https://github.com/librarySQL/library/blob/main/manage_usercreate.php)
 - 新增user or manager
+### [manage_useredit](https://github.com/librarySQL/library/blob/main/manage_useredit.php)
+- 管理者可編輯使用者資料
