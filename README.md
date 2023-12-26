@@ -30,8 +30,8 @@
 ### [seatdetail](https://github.com/librarySQL/library/blob/main/seatdetail.php)
 - 管理者登入後可以編輯、刪除、新增座位
 - 此頁面是列出所有的座位清單還有三個功能的按鈕
-- 刪除、新增做好了
-- 剩編輯
+- 可刪除、新增、修改
+
 ### [newseat](https://github.com/librarySQL/library/blob/main/newseat.php)
 - 管理者新增座位
 ### [seatdelete](https://github.com/librarySQL/library/blob/main/seatdelete.php)
