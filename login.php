@@ -6,15 +6,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+    
+    /* Navbar 樣式 */
+    .navbar {
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    .navbar a {
+        float: left;
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+    }
+
+    .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .add-button {
+        background-color: #3A3A3A;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    body {
+    background-color: #DCDDD8; /* 設定整個網頁的背景顏色 */
+    margin: 0; /* 移除預設邊距 */
+    }
+    .btn-primary {
+    background-color: 	#354B5E;
+    color: white;
+    padding: 3px 6px; /* 調整按鈕的大小 */
+
+    font-size: 14.5px;
+    }
+    
+</style>
 </head>
 <body>
+<div class="navbar">
+        
+		<a href="login.php">圖書館座位管理系統</a>
+        
+        <!-- 登入、登出 -->
+        <a href="user_register.php" style="float:right;">註冊</a>
+		
+    </div>
 <?php
 session_start();
 $msg = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") { 
     // 处理 POST 请求
-    $con = new mysqli("localhost", "root", "eva65348642","librarydb");
+    $con = new mysqli("localhost", "root", "ccl5266ccl","圖書館座位預約系統");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -38,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['account'] = $row['User_Account'];
                 $_SESSION['password'] = $row['User_Password'];
                 // Redirect to user.php if the user is a manager
-                header("Location: seat/seatdetail.php");
+                header("Location: alluser.php");
                 exit;
             }
             else if($row['isManager'] == 0){
@@ -46,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['userid'] = $row['User_Id'];
                 $_SESSION['account'] = $row['User_Account'];
                 $_SESSION['password'] = $row['User_Password'];
-                header("Location: reservation/user_new_reservation.php");
+                header("Location:user_new_reservation.php");
                 exit;
         }
             
@@ -65,9 +130,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<h4 class='form-signin-heading'>$msg</h4>";
         }
         ?>
-        <div align="center"><input type="text" class="form-control" name="account" placeholder="Account" style="width:30%;height: 40px;"></div><br>
-        <div align="center"><input type="password" class="form-control" name="password" placeholder="Password" style="width:30%;height: 40px;"></div><br>
+        <br>
+        <div align="center">
+        <label for="account">帳號 :</label><br>    
+        <input type="text" class="form-control" name="account" placeholder="Account" style="width:30%;height: 40px;"></div><br>
+        <div align="center">
+        <label for="password">密碼 :</label><br>    
+        <input type="password" class="form-control" name="password" placeholder="Password" style="width:30%;height: 40px;"></div><br>
         <div align="center"><button class="btn btn-primary" type="submit" name="login" style="width:30%;height: 40px;">Login</button></div>
+        <br>
         <div align="center">
             <button onclick="window.location.href='register.php'" type="button" name="register" style="width:30%;height: 40px;" id="register">Register</button>
         </div>
