@@ -69,19 +69,34 @@ if (isset($_SESSION['account']) ) {
             text-decoration: none;
             font-size: 16px;
         }
+		body {
+		background-color: #DCDDD8; /* 設定整個網頁的背景顏色 */
+		margin: 0; /* 移除預設邊距 */
+		}
+		.btn-primary {
+		background-color: 	#354B5E;
+		color: white;
+		padding: 3px 6px; /* 調整按鈕的大小 */
+	
+		font-size: 14.5px;
+		}
+		
     </style>
 </head>
 <body>
 <div class="navbar">
-    <a href="../userstatus.php">使用者名單</a>
-    <a href="seatdetail.php">座位狀況</a>
-    <!-- 登入、登出 -->
-    <a href="logout.php" style="float:right;">登出</a>
-    <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
-</div>
+        
+            
+   
+		<a href="manage_user.php">使用者</a>
+        <a href="manage_seat.php">座位狀況</a>
+        <!-- 登入、登出 -->
+        <a href="logout.php" style="float:right;">登出</a>
+		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
+    </div>
 <?php
     $mes = '';
-    $con = new mysqli("localhost", "root", "eva65348642","librarydb");
+    $con = new mysqli("localhost", "root", "jenny104408!","libdb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -111,7 +126,7 @@ if (isset($_SESSION['account']) ) {
     if ($con->query($newseat) === TRUE) {
         $mes = "新增成功";
         // 將使用者重新導向到 seatdetail.php
-        header("Location: seatdetail.php");
+        header("Location:manage_seat.php");
         exit(); // 確保之後的代碼不會執行
     } else {
         $mes = "Error: " . $newseat . "<br>" . $con->error;
@@ -122,6 +137,7 @@ if (isset($_SESSION['account']) ) {
     }
 }
 ?>
+
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
     <Form class="form-signin" role="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
     <?php
@@ -129,10 +145,11 @@ if (isset($_SESSION['account']) ) {
         echo"</br>";
     }
     ?>
-    <div align="center"><input type="text" class="form-control" require="require" name="seatname" placeholder="seatname"  style="width:30%;height: 40px;"></div><br>
-    <div align="center"><input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
-    <div align="center"><input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
-    <div align="center"><button class="btn btn-primary" type="submit" name="insert" style="width:30%;height: 40px;">新增座位</button></div>
+	
+    <div align="center">座位名稱：<input type="text" class="form-control" require="require" name="seatname" placeholder="seatname"  style="width:30%;height: 40px;"></div><br>
+    <div align="center">座位樓層：<input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
+    <div align="center">有無插座：<input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
+    <div align="center"><button class="btn-primary" type="submit" name="insert" style="width:30%;height: 40px;">新增座位</button></div>
     </Form>
     <div align="center"><h4><?php echo $mes?></h4></div>
 
