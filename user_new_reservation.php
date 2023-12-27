@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -293,7 +293,7 @@ function redirectToSelectSeat() {
 <div class="navbar">
     <a href="userstatus.php">會員</a>
     <a href="seat.php">座位一覽</a>
-    <a href="user_reservation.php">預約紀錄</a>
+    <a href="reservation.php">預約紀錄</a>
     <a href="user_new_reservation.php">預約座位</a>
     <a href="search_seat.php">查詢座位</a>
     
@@ -303,19 +303,19 @@ function redirectToSelectSeat() {
    
     <!-- 可以加入其他需要的連結 -->
 </div>
-
+<br><br>
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
     <form id="reservationForm" class="form-signin" role="form" onsubmit="redirectToSelectSeat(); return false;">
     <!-- 開始時間 -->
     <div align="center">
-    <label for="endtime">開始時間: </label>
+    <b><label for="endtime">開始時間： </label></b>
     <br>
     <input type="datetime-local" class="form-control" required="required" name="starttime" id="starttime" placeholder="starttime" style="width:30%;height: 40px;">
     </div>
     <br>
     <!-- 結束時間 -->
     <div align="center">
-        <label for="endtime">結束時間:</label>
+    <b><label for="endtime">結束時間:</label></b>
         <br>
         <input type="datetime-local" class="form-control" required="required" name="endtime" id="endtime" placeholder="endtime" style="width:30%;height: 40px;">
     </div>
@@ -352,11 +352,11 @@ function redirectToSelectSeat() {
             </script>
     <br>
             <div align="center">
-            <label for="endtime">座位樓層: </label>
+            <b><label for="endtime">座位樓層: </label></b>
             <br>    
             <input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
             <div align="center">
-            <label for="endtime">座位插座: </label>    
+            <b><label for="endtime">座位插座: </label></b>    
             <br>
             <input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
             <!-- 前面的代码保持不变 -->
