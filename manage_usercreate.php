@@ -1,8 +1,32 @@
+<?php
+session_start();
+
+$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+
+
+if ($con->connect_error) {
+    die("Connection failed: " . $con->connect_error);
+}
+$query = "SELECT MAX(User_Id) AS maxUserId FROM user";
+$result = $con->query($query);
+
+if (isset($_SESSION['account']) ) {
+    $userId = $_SESSION['account'];
+    
+    $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
+    //$Msg="您以違規".$_SESSION['suspention']."次!";
+} else {
+    // 如果未找到用户ID，可能需要再次重定向到登录页面或者显示错误信息
+    header("Location: login.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <style>
-        /* Navbar 樣式 */
+       /* Navbar 樣式 */
         .navbar {
             overflow: hidden;
             background-color: #333;
@@ -21,18 +45,70 @@
             background-color: #ddd;
             color: black;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+
+        /* 下拉菜单樣式 */
+        .dropdown {
+            float: left;
+            overflow: hidden;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+
+        .dropdown .dropbtn {
+            font-size: 16px;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 20px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: 0;
+        }
+
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
             text-align: left;
         }
-        th {
-            background-color: #f2f2f2;
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
         }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a.active {
+            background-color: #333;
+            color: white;
+        }
+		body {
+		background-color: #DCDDD8; /* 設定整個網頁的背景顏色 */
+		margin: 0; /* 移除預設邊距 */
+		}
+		.btn{
+			background-color: 	#354B5E;
+		color: white;
+		padding: 3px 6px; /* 調整按鈕的大小 */
+	
+		font-size: 14.5px;
+		}
+        
     </style>
 	
 	
@@ -55,16 +131,6 @@
 <body>
 
 <?php
-session_start();
-
-$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
-
-if ($con->connect_error) {
-    die("Connection failed: " . $con->connect_error);
-}
-$query = "SELECT MAX(User_Id) AS maxUserId FROM user";
-$result = $con->query($query);
-
 
 if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
@@ -97,7 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($con->query($insertSql) === TRUE) {
         // Redirect to manage_user.php
-        header("Location: ../manager/manage_user.php");
+        header("Location: manage_user.php");
         exit;
     } else {
         echo "错误：" . $insertSql . "<br>" . $con->error;
@@ -105,20 +171,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 
-echo 
-"<div class='navbar'>
-    <a href='../manager/manage_user.php'>使用者</a>
-	<a href='../manager/manage_usercreate.php'>新增使用者</a> 
-   
-    <!-- 登入、登出 -->
-    <a href='../logout/logout.php' style='float:right;'>登出</a>
-    
-    
-    <!-- 可以加入其他需要的連結 -->
-</div>";
 
 ?>
 
+<div class="navbar">
+        <div class="dropdown">
+            <button class="dropbtn">使用者</button>
+            <div class="dropdown-content">
+            <a <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) echo 'class="active"'; ?> href="manage_user.php">使用者名單</a>
+            <a <?php if (isset($_GET['type']) && $_GET['type'] === 'manager') echo 'class="active"'; ?> href="manage_user.php?type=manager">管理者名單</a>
+            <!-- 新增使用者按鈕 -->
+            <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) : ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
+        <a href="manage_seat.php">座位狀況</a>
+        <!-- 登入、登出 -->
+        <a href="logout.php" style="float:right;">登出</a>
+		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
+    </div>
+	</div>
 <div style="text-align: center; margin-top: 20px;">
     <form method="post" action="" onsubmit="return validateForm();">
         <label for="userId" style="text-align: left; display: inline-block; width: 100px;">UserId：</label>
@@ -141,12 +214,12 @@ echo
 
         <!-- Add other input fields as needed -->
 
-        <input type="submit" value="儲存">
+        <input class="btn" type="submit" value="儲存">
     </form>
 </div>
 
 <div style="text-align: center; margin-top: 30px;">
-    <a href="../manager/manage_user.php" style="text-align: left;">返回</a>
+    <a href="manage_user.php" style="text-align: left;">返回</a>
 </div>
 
 
