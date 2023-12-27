@@ -89,14 +89,14 @@ if (isset($_SESSION['account']) ) {
             
    
 		<a href="manage_user.php">使用者</a>
-        <a href="manage_seat.php">座位狀況</a>
+        <a href="seatdetail.php">座位狀況</a>
         <!-- 登入、登出 -->
         <a href="logout.php" style="float:right;">登出</a>
 		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
     </div>
 <?php
     $mes = '';
-    $con = new mysqli("localhost", "root", "jenny104408!","libdb");
+    $con = new mysqli("localhost", "root", "eva65348642","librarydb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -126,7 +126,7 @@ if (isset($_SESSION['account']) ) {
     if ($con->query($newseat) === TRUE) {
         $mes = "新增成功";
         // 將使用者重新導向到 seatdetail.php
-        header("Location:manage_seat.php");
+        header("Location:seatdetail.php");
         exit(); // 確保之後的代碼不會執行
     } else {
         $mes = "Error: " . $newseat . "<br>" . $con->error;
@@ -137,14 +137,11 @@ if (isset($_SESSION['account']) ) {
     }
 }
 ?>
-
-    <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
+    <h1 style="text-align: center; margin-top: 20px;">Create A New Seat</h1>
+    <div class="container" style="width: 700px;margin: 0px auto; margin-bottom 200px; font-family:Microsoft JhengHei;">
+    
     <Form class="form-signin" role="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-    <?php
-    for($i=0;$i<5;$i++){
-        echo"</br>";
-    }
-    ?>
+    
 	
     <div align="center">座位名稱：<input type="text" class="form-control" require="require" name="seatname" placeholder="seatname"  style="width:30%;height: 40px;"></div><br>
     <div align="center">座位樓層：<input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
@@ -152,8 +149,6 @@ if (isset($_SESSION['account']) ) {
     <div align="center"><button class="btn-primary" type="submit" name="insert" style="width:30%;height: 40px;">新增座位</button></div>
     </Form>
     <div align="center"><h4><?php echo $mes?></h4></div>
-
-
     </div>
 </body>
 </html>
