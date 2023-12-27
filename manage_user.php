@@ -1,3 +1,30 @@
+<?php
+session_start();
+
+    $con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+
+    if ($con->connect_error) {
+        die("Connection failed: " . $con->connect_error);
+    }
+
+    if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
+        header("Location: login.php");
+        exit;
+    }
+
+    if (isset($_SESSION['account']) ) {
+    $userId = $_SESSION['account'];
+    
+    $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
+    //$Msg="您以違規".$_SESSION['suspention']."次!";
+} else {
+    // 如果未找到用户ID，可能需要再次重定向到登录页面或者显示错误信息
+    header("Location: login.php");
+    exit;
+}
+
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,77 +105,94 @@
         }
 
         /* 修正表格樣式 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px; /* 調整與按鈕的間距 */
-        }
+       table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* 調整與按鈕的間距 */
+}
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
+th, td {
+    border: 0.001px solid #6E7783; /* 調整框線顏色 */
+    padding: 8px;
+    text-align: left;
+}
 
-        th {
-            background-color: #f2f2f2;
-        }
+th {
+		background-color: #475F77;
+		color: 	white;
+		}
 
-        .add-button {
-            background-color: #3A3A3A;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 16px;
-            margin: 20px; /* 調整按鈕的外邊距 */
-        }
-    </style>
+		.add-button {
+		 background-color: 	#354B5E;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 16px;
+		margin: 20px; /* 調整按鈕的外邊距 */
+		}
+
+
+
+		body {
+		background-color: #DCDDD8; /* 設定整個網頁的背景顏色 */
+		margin: 0; /* 移除預設邊距 */
+		}
+		.edit-button {
+		background-color: 	#354B5E;
+		color: white;
+		padding: 3px 6px; /* 調整按鈕的大小 */
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 18.5px;
+		margin: 0.01px; /* 調整按鈕的外邊距 */
+		}
+
+		.edit-button:hover {
+		background-color: #4E5563; /* 在:hover時改變的背景顏色 */
+		}
+
+		.delete-button {
+		background-color: #4F9D9D;
+		color: white;
+		padding: 3px 6px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 18.5px;
+	
+    
+		}
+		.delete-button:hover {
+		background-color: #4E5563; /* 在:hover時改變的背景顏色 */
+		}
+</style>
 </head>
 <body>
 <div class="navbar">
         <div class="dropdown">
             <button class="dropbtn">使用者</button>
             <div class="dropdown-content">
-            <a <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) echo 'class="active"'; ?> href="../user/manage_user.php">使用者名單</a>
-            <a <?php if (isset($_GET['type']) && $_GET['type'] === 'manager') echo 'class="active"'; ?> href="../user/manage_user.php?type=manager">管理者名單</a>
+            <a <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) echo 'class="active"'; ?> href="manage_user.php">使用者名單</a>
+            <a <?php if (isset($_GET['type']) && $_GET['type'] === 'manager') echo 'class="active"'; ?> href="manage_user.php?type=manager">管理者名單</a>
             <!-- 新增使用者按鈕 -->
             <?php if (!isset($_GET['type']) || (isset($_GET['type']) && $_GET['type'] !== 'manager')) : ?>
             <?php endif; ?>
         </div>
     </div>
 
-        <a href="../seat/seatdetail.php">座位狀況</a>
+        <a href="manage_seat.php">座位狀況</a>
         <!-- 登入、登出 -->
-        <a href="../logout.php" style="float:right;">登出</a>
+        <a href="logout.php" style="float:right;">登出</a>
+		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
     </div>
-    <button class='add-button' onclick="location.href='../user/manage_usercreate.php'" style='float:left; margin: 20px;'>新增使用者</button>
+    <button class='add-button' onclick="location.href='manage_usercreate.php'" style='float:left; margin: 20px;'>新增使用者</button>
 </div>
 <?php
-    session_start();
-
-    $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
-
-    if ($con->connect_error) {
-        die("Connection failed: " . $con->connect_error);
-    }
-
-    if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
-        header("Location: login.php");
-        exit;
-    }
-
-    if (!isset($_SESSION['account'])) {
-        header("Location: login.php");
-        exit;
-    }
-
-    $userId = $_SESSION['account'];
-
-    $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
-
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
     }
@@ -178,8 +222,8 @@
             echo "<td>{$row['Suspension']}</td>";
             echo "<td>" . ($row['isManager'] == 1 ? '是' : '否') . "</td>";
             echo "<td>
-            <button onclick=\"redirectToEditPage('" . $row['User_Id'] . "', '" . $row['User_Account'] . "', '" . $row['User_Password'] . "', '" . $row['Number_of_Violation'] . "', '" . $row['Suspension']. "', '" . $row['isManager'] . "')\">編輯</button>
-            <button onclick=\"redirectToDeletePage('" . $row['User_Id'] . "')\">刪除</button>
+            <button class='edit-button' onclick=\"redirectToEditPage('" . $row['User_Id'] . "', '" . $row['User_Account'] . "', '" . $row['User_Password'] . "', '" . $row['Number_of_Violation'] . "', '" . $row['Suspension']. "', '" . $row['isManager'] . "')\">編輯</button>
+            <button class='delete-button' onclick=\"redirectToDeletePage('" . $row['User_Id'] . "')\">刪除</button>
             </td>";
             echo "</tr>";
         }
