@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$conn = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -70,22 +70,136 @@ if (isset($_POST['selected_seat'])) {
             color: black;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* 下拉菜单樣式 */
+        .dropdown {
+            float: left;
+            overflow: hidden;
         }
 
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
+        .dropdown .dropbtn {
+            font-size: 16px;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 20px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: 0;
+        }
+
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
             text-align: left;
         }
 
-        th {
-            background-color: #f2f2f2;
+        .dropdown-content a:hover {
+            background-color: #ddd;
         }
-    </style>
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a.active {
+            background-color: #333;
+            color: white;
+        }
+
+        /* 修正表格樣式 */
+       table {
+    width: 100%;
+    border=1
+    border-collapse: collapse;
+    margin-top: 20px; /* 調整與按鈕的間距 */
+}
+
+th, td {
+    border: 0.001px solid #6E7783; /* 調整框線顏色 */
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+		background-color: #9db0c9;
+		color: 	black;
+		}
+
+		.add-button {
+		 background-color: 	#354B5E;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 16px;
+		margin: 20px; /* 調整按鈕的外邊距 */
+		}
+
+
+
+		body {
+		background-color: #ced8e4 ; /* 設定整個網頁的背景顏色 */
+		margin: 0; /* 移除預設邊距 */
+		}
+		.edit-button {
+		background-color: #feeba8;
+		color: #3e3e3e; 
+		padding: 3px 6px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 16px;
+		}
+
+		.edit-button:hover {
+		background-color: #4E5563; /* 在:hover時改變的背景顏色 */
+		}
+
+		.delete-button {
+		background-color: #f3dae0;
+		color: #3e3e3e; 
+		padding: 3px 6px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 18.5px;
+	
+    
+		}
+		.delete-button:hover {
+		background-color: #4E5563; /* 在:hover時改變的背景顏色 */
+		}
+        .search {
+		background-color: #feeba8;
+		color: #3e3e3e; 
+		padding: 3px 6px; /* 調整按鈕的大小 */
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 18.5px;
+		margin: 0.01px; /* 調整按鈕的外邊距 */
+		}
+</style>
 </head>
 
 <body>
@@ -157,7 +271,7 @@ if (isset($_POST['selected_seat'])) {
             <label for="socket">插座:</label>
             <input type="text" id="socket" name="socket" value="<?php echo htmlspecialchars($socket); ?>" readonly><br><br>
 
-            <input type="submit" value="預約座位">
+            <input class="edit-button" type="submit" value="預約座位">
             
             <?php
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -213,7 +327,7 @@ if (isset($_POST['selected_seat'])) {
                 
                             if ($stmt->execute()) {
                                 echo '<script>alert("您預約成功了！");</script>';
-                                echo '<script>window.location.href = "user_reservation.php";</script>';
+                                echo '<script>window.location.href = "reservation.php";</script>';
                             } else {
                                 echo "發生錯誤: " . $stmt->error;
                             }
