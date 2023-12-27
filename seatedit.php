@@ -31,7 +31,7 @@ if (isset($_SESSION['account'])) {
     // 检查用户是否登录
     $useraccount = $_SESSION['account'];
     $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
-    $con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+    $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -79,7 +79,7 @@ if (isset($_SESSION['account'])) {
        
                     <script language="javascript">
                         alert('座位狀況修改完成！');
-                        location.href="manage_seat.php";
+                        location.href="seatdetail.php";
                     </script>
                     
                     <?php 
@@ -202,13 +202,15 @@ if (isset($_SESSION['account'])) {
         </div>
     </div>
 
-        <a href="manage_seat.php">座位狀況</a>
+        <a href="seatdetail.php">座位狀況</a>
         <!-- 登入、登出 -->
         <a href="logout.php" style="float:right;">登出</a>
 		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
     </div>
     <!-- 表單 -->
+    <div style="text-align: center; margin-top: 20px;">
     <h1>Edit Seat Data</h1>
+    
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <!-- 座位编号 -->
         <label for="Seat_Id">座位Id:</label>
@@ -228,5 +230,6 @@ if (isset($_SESSION['account'])) {
         <!-- 提交按钮 -->
         <input class="inputbtn" type="submit" value="儲存修改">
     </form>
+    </div>
 </body>
 </html>
