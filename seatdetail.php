@@ -52,37 +52,81 @@ if (isset($_SESSION['account']) ) {
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .add-button {
-            background-color: #3A3A3A;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 16px;
-        }
+		border: 0.001px solid #6E7783; /* 調整框線顏色 */
+		padding: 8px;
+		text-align: left;
+		}	
+
+		th {
+		background-color: #475F77;
+		color: 	white;
+		}
+
+		.add-button {
+		 background-color: 	#354B5E;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 16px;
+		margin: 20px; /* 調整按鈕的外邊距 */
+		}
+
+
+
+		body {
+		background-color: #DCDDD8; /* 設定整個網頁的背景顏色 */
+		margin: 0; /* 移除預設邊距 */
+		}
+		.edit-button {
+		background-color: 	#354B5E;
+		color: white;
+		padding: 3px 6px; /* 調整按鈕的大小 */
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		text-decoration: none;
+		font-size: 18.5px;
+		margin: 0.01px; /* 調整按鈕的外邊距 */
+		}
+
+		.edit-button:hover {
+		background-color: #4E5563; /* 在:hover時改變的背景顏色 */
+		}
+
+		.delete-button {
+		background-color: #4F9D9D;
+		color: white;
+		padding: 3px 6px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 18.5px;
+	
+    
+		}
+		.delete-button:hover {
+		background-color: #4E5563; /* 在:hover時改變的背景顏色 */
+		}
+
+
     </style>
 </head>
 <body>
 <div class="navbar">
-    <a href="../userstatus.php">使用者名單</a>
-    <a href="seatdetail.php">座位狀況</a>
-    <!-- 登入、登出 -->
-    <a href="logout.php" style="float:right;">登出</a>
-    <h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
-</div>
-<button class="add-button" onclick="location.href='newseat.php'" style="float:left; margin: 20px;">新增座位</button>
+        
+		<a href="manage_user.php">使用者</a>
+        <a href="manage_seat.php">座位狀況</a>
+        <!-- 登入、登出 -->
+        <a href="logout.php" style="float:right;">登出</a>
+		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
+    </div>
+	<button class='add-button' onclick="location.href='manage_seatcreate.php'" style='float:left; margin: 20px;'>新增座位</button>
 <?php
 
-$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -105,9 +149,9 @@ echo "<table>
         echo "<td>" . $row['Seat_Floor'] . "</td>";
         echo "<td>" . $row['Socket'] . "</td>";
         echo "<td> 
-        <button onclick=\"redirectToEditPage('". $row['Seat_ID']."', '".$row['Seat_Name']."','".$row['Seat_Floor']."', '".$row['Socket']."')\">編輯</button>
+        <button class='edit-button' onclick=\"redirectToEditPage('". $row['Seat_ID']."', '".$row['Seat_Name']."','".$row['Seat_Floor']."', '".$row['Socket']."')\">編輯</button>
 
-        <button onclick=\"deleteSeat('{$row['Seat_ID']}')\">刪除</button> </td>";
+        <button class='delete-button' onclick=\"deleteSeat('{$row['Seat_ID']}')\">刪除</button> </td>";
         echo "</tr>";
     }
     
@@ -115,7 +159,7 @@ echo "<table>
 echo "</table>";
 echo "<script>
 function redirectToEditPage(seatId, seatName, seatFloor, socket) {
-    var editPageUrl = 'seatedit.php' + '?seatId=' + encodeURIComponent(seatId) + '&seatName=' + encodeURIComponent(seatName) + '&seatFloor=' + encodeURIComponent(seatFloor) + '&socket=' + encodeURIComponent(socket);
+    var editPageUrl = 'manage_seatedit.php' + '?seatId=' + encodeURIComponent(seatId) + '&seatName=' + encodeURIComponent(seatName) + '&seatFloor=' + encodeURIComponent(seatFloor) + '&socket=' + encodeURIComponent(socket);
     window.location.href = editPageUrl;
 }
 
@@ -123,7 +167,7 @@ function deleteSeat(seatID) {
     var deleteConfirmation = confirm('是否要刪除此座位？');
 
     if (deleteConfirmation) {
-        var deletePageUrl = 'seatdelete.php?id=' + seatID;
+        var deletePageUrl = 'manage_seatdelete.php?id=' + seatID;
         window.location.href = deletePageUrl;
     } else {
         // 用户取消删除操作，不执行任何操作
