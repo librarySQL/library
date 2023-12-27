@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 
 if ($con->connect_error) {
@@ -186,12 +186,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 
-        <a href="manage_seat.php">座位狀況</a>
+        <a href="seatdetail.php">座位狀況</a>
         <!-- 登入、登出 -->
         <a href="logout.php" style="float:right;">登出</a>
 		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
     </div>
 	</div>
+    <h1 style="text-align: center; margin-top: 20px;">Create A New User</h1>
 <div style="text-align: center; margin-top: 20px;">
     <form method="post" action="" onsubmit="return validateForm();">
         <label for="userId" style="text-align: left; display: inline-block; width: 100px;">UserId：</label>
