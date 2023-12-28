@@ -34,13 +34,14 @@ if (isset($_POST['search']) && !empty($_POST['starttime']) && !empty($_POST['end
     $socket = $_POST['socket'];
 
     // 查询可用座位
-    $available_seats_query = "SELECT Seat_Floor,Seat_Name,Socket FROM seat
-        WHERE Seat_Id NOT IN (
-            SELECT Seat_Id FROM Reservation 
-            WHERE (Start_Time <= '$endtime' AND End_Time >= '$starttime')
-        ) 
-        AND Seat_Floor = '$seatfloor' 
-        AND Socket = '$socket'";
+    $available_seats_query = "SELECT Seat_Floor, Seat_Name, Socket FROM seat s
+WHERE s.Seat_Id NOT IN (
+    SELECT r.Seat_Id FROM reservation r
+    WHERE (r.Start_Time < '$endtime' AND r.End_Time > '$starttime')
+) 
+AND s.Seat_Floor = '$seatfloor' 
+AND s.Socket = '$socket'";
+
 
     $available_seats_result = $con->query($available_seats_query);
 
