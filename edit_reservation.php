@@ -53,12 +53,6 @@ $query = "SELECT r.Reservation_Id, u.User_Account, s.Seat_Name, s.Seat_Floor, s.
         exit; // 如果找不到預約，終止程式
     }*/
 
-    $useraccount = $_GET['account'];  
-    $seatname = $_GET['seatName'];
-    $starttime = $_GET['startTime']; 
-    $endtime = $_GET['endTime'];
-    $seatfloor = $_GET['seatFloor'];
-    $socket = $_GET['socket'];
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 如果是POST请求，检查是否存在reservationId，并从POST数据中获取其值
         if (isset($_POST['reservationId'])) {
