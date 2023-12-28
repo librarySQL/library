@@ -210,8 +210,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		<label for="suspension" style="text-align: left; display: inline-block; width: 100px;">停權：</label>
 		<input type="text" id="suspension" name="suspension" style="margin-bottom: 10px;"><br>
 
-		<label for="isManager" style="text-align: left; display: inline-block; width: 100px;">管理者：</label>
-        <input type="text" id="isManager" name="isManager" required style="margin-bottom: 20px;"><br>
+		<label for="isManager" style="text-align: left; display: inline-block; width: 100px;">身分：</label>
+        <select id="isManager" name="isManager" required style="width:12%;height: 20px;margin-bottom: 20px;">
+            <option value="0">使用者</option>
+            <option value="1">管理者</option>
+        </select><br>
 
         <!-- Add other input fields as needed -->
 
