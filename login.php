@@ -78,10 +78,10 @@
 <body>
 <div class="navbar">
         
-		<a href="login.php">圖書館座位管理系統</a>
+        <a href="login.php">圖書館座位預約紀錄</a>
         
         <!-- 登入、登出 -->
-        <a href="user_register.php" style="float:right;">註冊</a>
+        <a href="register.php" style="float:right;">註冊</a>
 		
     </div>
 <?php
@@ -90,7 +90,7 @@ $msg = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") { 
     // 处理 POST 请求
-    $con = new mysqli("localhost", "root", "ccl5266ccl","圖書館座位預約系統");
+    $con = new mysqli("localhost", "root", "eva65348642","librarydb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['account'] = $row['User_Account'];
                 $_SESSION['password'] = $row['User_Password'];
                 // Redirect to user.php if the user is a manager
-                header("Location: alluser.php");
+                header("Location: manage_user.php");
                 exit;
             }
             else if($row['isManager'] == 0){
@@ -143,10 +143,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ?>
         <br>
         <div align="center">
-        <label for="account">帳號 :</label><br>    
+        <b><label for="account">帳號 :</label></b><br>    
         <input type="text" class="form-control" name="account" placeholder="Account" style="width:30%;height: 40px;"></div><br>
         <div align="center">
-        <label for="password">密碼 :</label><br>    
+        <b><label for="password">密碼 :</label></b><br>    
         <input type="password" class="form-control" name="password" placeholder="Password" style="width:30%;height: 40px;"></div><br>
         <div align="center"><button class="btn btn-primary" type="submit" name="login" style="width:30%;height: 40px;">Login</button></div>
         <br>
