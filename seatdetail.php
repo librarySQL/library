@@ -190,14 +190,14 @@ th {
 	<button class='add-button' onclick="location.href='newseat.php'" style='float:left; margin: 20px;'>新增座位</button>
 <?php
 
+
 $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 
- $seat = $con->query("SELECT Seat_ID, Seat_Name, Seat_Floor, Socket FROM seat");
-
+$seat = $con->query("SELECT Seat_ID, Seat_Name, Seat_Floor, Socket FROM seat ORDER BY Seat_Floor ASC");
 
 echo "<table>
     <tr>
@@ -207,18 +207,17 @@ echo "<table>
         <th>更新</th>
     </tr>";
 
-    while ($row = mysqli_fetch_array($seat)) {
-        echo "<tr>";
-        echo "<td>" . $row['Seat_Name'] . "</td>";
-        echo "<td>" . $row['Seat_Floor'] . "</td>";
-        echo "<td>" . $row['Socket'] . "</td>";
-        echo "<td> 
+while ($row = mysqli_fetch_array($seat)) {
+    echo "<tr>";
+    echo "<td>" . $row['Seat_Name'] . "</td>";
+    echo "<td>" . $row['Seat_Floor'] . "</td>";
+    echo "<td>" . $row['Socket'] . "</td>";
+    echo "<td> 
         <button class='edit-button' onclick=\"redirectToEditPage('". $row['Seat_ID']."', '".$row['Seat_Name']."','".$row['Seat_Floor']."', '".$row['Socket']."')\">編輯</button>
-
-        <button class='delete-button' onclick=\"deleteSeat('{$row['Seat_ID']}')\">刪除</button> </td>";
-        echo "</tr>";
-    }
-    
+        <button class='delete-button' onclick=\"deleteSeat('{$row['Seat_ID']}')\">刪除</button> 
+    </td>";
+    echo "</tr>";
+}
 
 echo "</table>";
 echo "<script>
