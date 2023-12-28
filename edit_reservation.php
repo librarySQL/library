@@ -30,29 +30,7 @@ if (isset($_SESSION['account'])) {
         die("Connection failed: " . $con->connect_error);
     }
      // 根據 Reservation ID 從資料庫中檢索相關資訊
-     
-/*
-$query = "SELECT r.Reservation_Id, u.User_Account, s.Seat_Name, s.Seat_Floor, s.Socket, r.Start_Time, r.End_Time
-    FROM reservation r
-    JOIN user u ON r.User_Id = u.User_Id
-    JOIN seat s ON r.Seat_Id = s.Seat_Id
-    WHERE u.User_Account = '$useraccount'";
- $result = $con->query($query);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // 獲取預設值
-        $useraccount = $row['User_Account'];
-        $seatname = $row['Seat_Name'];
-        $starttime = $row['Start_Time'];
-        $endtime = $row['End_Time'];
-        $seatfloor = $row['Seat_Floor'];
-        $socket = $row['Socket'];
-    } else {
-        echo "No reservation found for the given ID and account.";
-        exit; // 如果找不到預約，終止程式
-    }*/
-
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 如果是POST请求，检查是否存在reservationId，并从POST数据中获取其值
         if (isset($_POST['reservationId'])) {
@@ -70,10 +48,14 @@ $query = "SELECT r.Reservation_Id, u.User_Account, s.Seat_Name, s.Seat_Floor, s.
             
                 if ($result === TRUE && $con->affected_rows > 0) { 
                     ?>
+                    
+                
                     <script language="javascript">
-                        alert('預約資料修改完成！');
-                        location.href="user_reservation.php";
+                                alert('預約資料修改完成！');
+                                location.href="user_reservation.php";
                     </script>
+
+        
                     <?php 
                 } else {
                     echo "Error updating record: " . $con->error;
@@ -252,9 +234,11 @@ th {
     <!-- 可以加入其他需要的連結 -->
 </div>
     <!-- 表單 -->
+    <div align="center">
     <h1>編輯預約紀錄</h1>
     <form action="user_reservation_edit.php" method="post">
         <!-- ... -->
+        
         <input type="hidden" name="reservationId" value="<?php echo $reservationId; ?>">
         <!-- ... -->
         <label for="User_Account">帳號：</label>
@@ -274,8 +258,9 @@ th {
 
         <label for="Socket">插座:</label>
         <input type="text" id="Socket" name="Socket" value="<?php echo htmlspecialchars($socket); ?>" readonly><br><br>
-        
+
         <input class="edit-button " type="submit" value="儲存修改">
     </form>
+    </div> 
 </body>
 </html>
