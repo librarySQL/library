@@ -363,7 +363,11 @@ function redirectToSelectSeat() {
             <div align="center">
             <b><label for="endtime">座位插座: </label></b>    
             <br>
-            <input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
+            <select class="form-control" required="required" name="socket" style="width:30%;height: 40px;">
+        <option value="有">有</option>
+        <option value="無">無</option>
+    </select>
+        </div><br>
             <!-- 前面的代码保持不变 -->
             <div align="center">
         <input class="search"type="submit" value="查詢可預約座位" style="width:30%;height: 40px;">
