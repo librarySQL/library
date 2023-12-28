@@ -234,18 +234,27 @@ th {
     }
 }
 ?>
-    <h1 style="text-align: center; margin-top: 20px;">Create A New Seat</h1>
-    <div class="container" style="width: 700px;margin: 0px auto; margin-bottom 200px; font-family:Microsoft JhengHei;">
-    
-    <Form class="form-signin" role="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-    
-	
-    <div align="center">座位名稱：<input type="text" class="form-control" require="require" name="seatname" placeholder="seatname"  style="width:30%;height: 40px;"></div><br>
-    <div align="center">座位樓層：<input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
-    <div align="center">有無插座：<input type="text" class="form-control" require="require" name="socket"  placeholder="socket" style="width:30%;height: 40px;"></div><br>
-    <div align="center"><button class="btn-primary" type="submit" name="insert" style="width:30%;height: 40px;">新增座位</button></div>
-    </Form>
+   <h1 style="text-align: center; margin-top: 20px;">Create A New Seat</h1>
+<div class="container" style="width: 700px;margin: 0px auto; margin-bottom 200px; font-family:Microsoft JhengHei;">
+    <form class="form-signin" role="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+        <div align="center">
+            座位名稱：<input type="text" class="form-control" require="require" name="seatname" placeholder="seatname"  style="width:30%;height: 40px;"><br><br>
+            座位樓層：
+            <select name="seatfloor" style="width:30%;height: 40px;">
+                <option value="1">1樓</option>
+                <option value="2">2樓</option>
+                <option value="3">3樓</option>
+            </select><br><br>
+            有無插座：
+            <select name="socket" style="width:30%;height: 40px;">
+                <option value="有">有</option>
+                <option value="無">無</option>
+            </select><br><br>
+            <button class="btn-primary" type="submit" name="insert" style="width:30%;height: 40px;">新增座位</button>
+        </div>
+    </form>
     <div align="center"><h4><?php echo $mes?></h4></div>
-    </div>
+</div>
+
 </body>
 </html>
