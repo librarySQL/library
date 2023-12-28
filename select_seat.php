@@ -32,10 +32,9 @@ if ($filtered_seats_result->num_rows > 0) {
     while ($row = $filtered_seats_result->fetch_assoc()) {
         $seat = $row['Seat_Name']; // 使用 $seat 變數存儲座位名稱
         $available_seats[] = $seat; // 將座位名稱添加到可用座位陣列中
-        //echo "<option value='$seat'>$seat</option>"; // 使用 $seat 變數來顯示選項
     }
 } else {
-    echo "<option value=''>沒有符合條件的座位</option>";
+    //echo "<option value=''>沒有符合條件的座位</option>";
 }
 
 }
