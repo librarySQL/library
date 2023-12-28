@@ -1,5 +1,10 @@
 <?php
 session_start();
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+
+if ($con->connect_error) {
+    die("Connection failed: " . $con->connect_error);
+}
 
 // 检查用户是否已登录，如果未登录则重定向到登录页面
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
@@ -174,7 +179,7 @@ th {
 <div class="navbar">
     <a href="userstatus.php">會員</a>
     <a href="seat.php">座位一覽</a>
-    <a href="user_reservation.php">預約紀錄</a>
+    <a href="reservation.php">預約紀錄</a>
     <a href="user_new_reservation.php">預約座位</a>
     <a href="search_seat.php">查詢座位</a>
     
@@ -186,20 +191,19 @@ th {
 </div>
 <?php
 
-$con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
 }
 
-$seat = $con->query("SELECT * FROM seat");
+$seat = $con->query("SELECT * FROM seat ORDER BY Seat_Floor ASC");
 
 echo "<table>
     <tr>
         <th>座位編號</th>
         <th>座位樓層</th>
         <th>插座</th>
-       
     </tr>";
 
 while ($row = mysqli_fetch_array($seat)) {
