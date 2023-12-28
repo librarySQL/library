@@ -165,8 +165,8 @@ $query = "SELECT r.Reservation_Id, u.User_Account, s.Seat_Name, s.Seat_Floor, s.
 
         <label for="Socket">插座:</label>
         <input type="text" id="Socket" name="Socket" value="<?php echo htmlspecialchars($socket); ?>" readonly><br><br>
-
-        <input type="submit" value="儲存修改">
+        
+        <input class="edit-button " type="submit" value="儲存修改">
     </form>
 </body>
 </html>
