@@ -2,7 +2,7 @@
 session_start();
 
 // 连接数据库
-$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-        <a href="manage_seat.php">座位狀況</a>
+        <a href="seatdetail.php">座位狀況</a>
         <!-- 登入、登出 -->
         <a href="logout.php" style="float:right;">登出</a>
 		<h4 style="float:right;"><font color="white"><?php echo $accountMessage; ?></font></h4>
@@ -223,10 +223,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label for="Suspension">停權：:</label>
         <input type="text" id="Suspension" name="Suspension" value="<?php echo $suspension; ?>" ><br><br>
         <!-- 是否為管理者 -->
-        <label for="isManager">管理者:</label>
-        <select id="isManager" name="isManager" required>
-        <option value="1" <?php if ($isManager == 1) echo 'selected'; ?>>是</option>
-        <option value="0" <?php if ($isManager == 0) echo 'selected'; ?>>否</option>
+        <label for="isManager">身分：</label>
+        <select id="isManager" name="isManager" style="width:12%;height: 20px;margin-bottom: 20px;"required>
+        <option value="1" <?php if ($isManager == 1) echo 'selected'; ?>>管理者</option>
+        <option value="0" <?php if ($isManager == 0) echo 'selected'; ?>>使用者</option>
         </select><br><br>
         <!-- 提交按钮 -->
         <input class="inputbtn" type="submit" value="儲存修改">
