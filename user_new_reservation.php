@@ -355,7 +355,11 @@ function redirectToSelectSeat() {
             <div align="center">
             <b><label for="endtime">座位樓層: </label></b>
             <br>    
-            <input type="text" class="form-control" require="require" name="seatfloor" placeholder="seatfloor"  style="width:30%;height: 40px;"></div><br>
+            <select class="form-control" required="required" name="seatfloor" style="width:30%;height: 40px;">
+        <option value="1">1樓</option>
+        <option value="2">2樓</option>
+        <option value="3">3樓</option>
+    </select></div><br>
             <div align="center">
             <b><label for="endtime">座位插座: </label></b>    
             <br>
