@@ -165,6 +165,10 @@ th {
     .delete-button:hover {
     background-color: #4E5563; /* 在:hover時改變的背景顏色 */
     }
+    .btn-primary {
+    background-color: 	#354B5E;
+    color: white;
+    }
 
 
 </style>
