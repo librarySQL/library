@@ -7,22 +7,39 @@ if ($conn->connect_error) {
 }
 // 检查是否收到 POST 请求并且字段不为空
 if (isset($_SESSION['account']) && isset($_POST['starttime']) && isset($_POST['endtime']) && isset($_POST['seatfloor']) && isset($_POST['socket'])) {
-    $account=$_SESSION['account'];
+    $account = $_SESSION['account'];
     $start_time = $_POST['starttime'];
     $end_time = $_POST['endtime'];
     $seatfloor = $_POST['seatfloor'];
     $socket = $_POST['socket'];
     
-    
+    // 根據用戶選擇的樓層和插座值篩選可用座位，同時排除已預約的座位
+    $filtered_seats_query = "SELECT Seat_Name FROM seat 
+    WHERE Seat_Floor = '$seatfloor' 
+    AND Socket = '$socket'
+    AND Seat_Id NOT IN (
+        SELECT r.Seat_Id FROM reservation r
+        WHERE (r.Start_Time BETWEEN '$start_time' AND '$end_time' OR r.End_Time BETWEEN '$start_time' AND '$end_time')
+        OR ('$start_time' BETWEEN r.Start_Time AND r.End_Time OR '$end_time' BETWEEN r.Start_Time AND r.End_Time)
+    )";
 
+
+$filtered_seats_result = $conn->query($filtered_seats_query);
+
+// 取得座位清單，以供下拉式選單使用
+$available_seats = array();
+if ($filtered_seats_result->num_rows > 0) {
+    while ($row = $filtered_seats_result->fetch_assoc()) {
+        $seat = $row['Seat_Name']; // 使用 $seat 變數存儲座位名稱
+        $available_seats[] = $seat; // 將座位名稱添加到可用座位陣列中
+        //echo "<option value='$seat'>$seat</option>"; // 使用 $seat 變數來顯示選項
+    }
 } else {
-    echo "未收到正确的数据";
-    // 设置默认值或进行其他处理
-    $starttime = '';
-    $endtime = '';
-    $seatfloor = '';
-    $socket = '';
+    echo "<option value=''>沒有符合條件的座位</option>";
 }
+
+}
+
 // 检查用户是否已登录，如果未登录则重定向到登录页面
 if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
     header("Location: login.php");
@@ -41,6 +58,7 @@ if (isset($_SESSION['account']) ) {
     exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -230,7 +248,8 @@ th {
     <!-- 座位編號 -->
 <label for="seatname">座位編號:</label>
 <select id="seatname" name="seatname">
-    <?php
+<?php
+    
     // 檢查是否有選擇座位並設置 $seat_name 變數
     if (isset($_POST['seatname'])) {
         $seat_name = $_POST['seatname'];
@@ -241,20 +260,29 @@ th {
         $seatfloor = $_POST['seatfloor'];
         $socket = $_POST['socket'];
 
-        $filtered_seats_query = "SELECT Seat_Name FROM seat WHERE Seat_Floor = '$seatfloor' AND Socket = '$socket'";
-        $filtered_seats_result = $conn->query($filtered_seats_query);
+        $filtered_seats_query = "SELECT Seat_Name FROM seat 
+        WHERE Seat_Floor = '$seatfloor' 
+        AND Socket = '$socket'
+        AND Seat_Id NOT IN (
+            SELECT r.Seat_Id FROM reservation r
+            WHERE (r.Start_Time < '$end_time' AND r.End_Time > '$start_time')
+        )";
 
-        if ($filtered_seats_result->num_rows > 0) {
-            // 顯示符合樓層和插座的座位選項
-            while ($row = $filtered_seats_result->fetch_assoc()) {
-                $seat = $row['Seat_Name'];
-                echo "<option value='$seat'>$seat</option>";
-            }
-        } else {
-            echo "<option value=''>沒有符合條件的座位</option>";
+    $filtered_seats_result = $conn->query($filtered_seats_query);
+
+    // 取得座位清單，以供下拉式選單使用
+    $available_seats = array();
+    if ($filtered_seats_result->num_rows > 0) {
+        while ($row = $filtered_seats_result->fetch_assoc()) {
+            $seat = $row['Seat_Name']; // 使用 $seat 變數存儲座位名稱
+            $available_seats[] = $seat; // 將座位名稱添加到可用座位陣列中
+            echo "<option value='$seat'>$seat</option>"; // 使用 $seat 變數來顯示選項
         }
+    } else {
+        echo "<option value=''>沒有符合條件的座位</option>";
     }
-    ?>
+}
+?>
 </select>
 
 
