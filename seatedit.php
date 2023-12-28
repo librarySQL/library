@@ -220,12 +220,21 @@ if (isset($_SESSION['account'])) {
         <input type="text" id="Seat_Name" name="Seat_Name" value="<?php echo $seatname; ?>" required><br><br>
 
         <!-- 座位楼层 -->
-        <label for="Seat_Floor">座位樓層:</label>
-        <input type="text" id="Seat_Floor" name="Seat_Floor" value="<?php echo $seatfloor; ?>" required><br><br>
+<label for="Seat_Floor">座位樓層:</label>
+<select id="Seat_Floor" name="Seat_Floor" style="width:10%;height: 30px;"required>
+    <option value="1" <?php if ($seatfloor == '1') echo 'selected'; ?>>1樓</option>
+    <option value="2" <?php if ($seatfloor == '2') echo 'selected'; ?>>2樓</option>
+    <option value="3" <?php if ($seatfloor == '3') echo 'selected'; ?>>3樓</option>
+</select><br><br>
+
 
         <!-- 插座 -->
-        <label for="Socket">插座:</label>
-        <input type="text" id="Socket" name="Socket" value="<?php echo $socket; ?>" required><br><br>
+<label for="Socket">插座:</label>
+<select id="Socket" name="Socket" style="width:10%;height: 30px;" required>
+    <option value="有" <?php if ($socket == '有') echo 'selected'; ?>>有</option>
+    <option value="無" <?php if ($socket == '無') echo 'selected'; ?>>無</option>
+</select><br><br>
+
 
         <!-- 提交按钮 -->
         <input class="inputbtn" type="submit" value="儲存修改">
