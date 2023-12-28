@@ -50,6 +50,16 @@
         text-decoration: none;
         font-size: 16px;
     }
+    .register {
+        background-color: #4f9d9d;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
     body {
     background-color: #DCDDD8; /* 設定整個網頁的背景顏色 */
     margin: 0; /* 移除預設邊距 */
@@ -62,6 +72,7 @@
     font-size: 14.5px;
     }
     
+
 </style>
 </head>
 <body>
@@ -140,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div align="center"><button class="btn btn-primary" type="submit" name="login" style="width:30%;height: 40px;">Login</button></div>
         <br>
         <div align="center">
-            <button onclick="window.location.href='register.php'" type="button" name="register" style="width:30%;height: 40px;" id="register">Register</button>
+            <button class="register" onclick="window.location.href='register.php'" type="button" name="register" style="width:30%;height: 40px;" id="register">Register</button>
         </div>
     </form>
 </div>
