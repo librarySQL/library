@@ -324,15 +324,37 @@ function redirectToSelectSeat() {
             // 獲取開始時間和結束時間的 input 元素
             var startTimeInput = document.getElementById('starttime');
             var endTimeInput = document.getElementById('endtime');
-
+            // 当开始时间改变时执行验证
+            startTimeInput.addEventListener('change', function() {
+            // 获取开始时间的值
+            var startTimeValue = new Date(startTimeInput.value);
+        
+            // 获取当天8:00的时间
+             var libraryOpeningTime = new Date();
+            libraryOpeningTime.setHours(8, 0, 0, 0); // 设置为当天的8:00
+        
+            // 验证开始时间不早于图书馆开馆时间（早上8:00）
+            if (startTimeValue < libraryOpeningTime) {
+            alert('圖書館早上8:00才開館喔！');
+            startTimeInput.value = ''; // 清空开始时间字段
+            }
+            });
             // 當結束時間改變時執行驗證
             endTimeInput.addEventListener('change', function() {
                 // 獲取開始時間和結束時間的值
                 var startTimeValue = new Date(startTimeInput.value);
                 var endTimeValue = new Date(endTimeInput.value);
-
+                // 获取当天 23:00 的时间
+                var libraryClosingTime = new Date();
+                libraryClosingTime.setHours(23, 0, 0, 0); // 设置为当天的23:00
+    
+                 // 驗證結束時間不晚於圖書館關閉時間（晚上23:00）
+                if (endTimeValue > libraryClosingTime) {
+                 alert('圖書館晚上11:00就閉館囉！');
+                endTimeInput.value = ''; // 清空結束時間欄位
+                }
                 // 驗證結束時間不早於開始時間
-                if (endTimeValue < startTimeValue) {
+                else if (endTimeValue < startTimeValue) {
                     alert('結束時間不能早於開始時間');
                     endTimeInput.value = ''; // 清空結束時間欄位
                 }
