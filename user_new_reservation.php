@@ -32,16 +32,27 @@ if (isset($_POST['search']) && !empty($_POST['starttime']) && !empty($_POST['end
     $endtime = $_POST['endtime'];
     $seatfloor = $_POST['seatfloor'];
     $socket = $_POST['socket'];
+     
+    // 开始时间验证 - 10:00以后可以预订
+     $libraryOpeningTime = strtotime('today 10:00');
+     if (strtotime($starttime) < $libraryOpeningTime) {
+         $mes = "圖書館從早上10:00開始接受預約座位！";
+     }
+ 
+     // 结束时间验证 - 不晚于当天的22:00
+     $libraryClosingTime = strtotime('today 22:00');
+     if (strtotime($endtime) > $libraryClosingTime) {
+         $mes = "圖書館晚上10:00就不再接受預約座位了！";
+     }
 
     // 查询可用座位
     $available_seats_query = "SELECT Seat_Floor, Seat_Name, Socket FROM seat s
-WHERE s.Seat_Id NOT IN (
-    SELECT r.Seat_Id FROM reservation r
-    WHERE (r.Start_Time < '$endtime' AND r.End_Time > '$starttime')
-) 
-AND s.Seat_Floor = '$seatfloor' 
-AND s.Socket = '$socket'";
-
+        WHERE s.Seat_Id NOT IN (
+            SELECT r.Seat_Id FROM reservation r
+            WHERE (r.Start_Time < '$endtime' AND r.End_Time > '$starttime')
+        ) 
+        AND s.Seat_Floor = '$seatfloor' 
+        AND s.Socket = '$socket'";
 
     $available_seats_result = $con->query($available_seats_query);
 
@@ -258,33 +269,44 @@ function redirectToSelectSeat() {
     form.submit();
 }
 
-    // 獲取開始時間和結束時間的 input 元素
-    var startTimeInput = document.getElementById('starttime');
+var startTimeInput = document.getElementById('starttime');
     var endTimeInput = document.getElementById('endtime');
 
-    // 當結束時間改變時執行驗證
-    endTimeInput.addEventListener('change', function() {
-        // 獲取開始時間和結束時間的值
+    startTimeInput.addEventListener('change', function() {
         var startTimeValue = new Date(startTimeInput.value);
-        var endTimeValue = new Date(endTimeInput.value);
+        var currentDate = new Date(); // 獲取目前的日期和時間
 
-        // 驗證結束時間不早於開始時間
-        if (endTimeValue < startTimeValue) {
-            alert('結束時間不能早於開始時間');
-            endTimeInput.value = ''; // 清空結束時間欄位
+        var libraryOpeningTime = new Date(startTimeValue);
+        libraryOpeningTime.setHours(8, 0, 0, 0); // 根據所選日期設定圖書館開放時間為早上 8 點
+
+        if (startTimeValue < currentDate || startTimeValue < libraryOpeningTime) {
+            alert('請選擇有效的開始時間，在所選日期的早上 8 點後。');
+            startTimeInput.value = '';
         }
     });
 
-    // 當開始時間改變時執行驗證
+    endTimeInput.addEventListener('change', function() {
+        var startTimeValue = new Date(startTimeInput.value);
+        var endTimeValue = new Date(endTimeInput.value);
+        var currentDate = new Date();
+
+        var libraryClosingTime = new Date(startTimeValue);
+        libraryClosingTime.setHours(22, 0, 0, 0); // 根據所選日期設定圖書館關閉時間為晚上 10 點
+
+        if (endTimeValue > libraryClosingTime || endTimeValue < startTimeValue || endTimeValue < currentDate) {
+            alert('請選擇有效的結束時間，在所選日期的晚上 10 點前，並且晚於開始時間。');
+            endTimeInput.value = '';
+        }
+    });
+
+    // 當開始時間改變時的額外結束時間驗證
     startTimeInput.addEventListener('change', function() {
-        // 獲取開始時間和結束時間的值
         var startTimeValue = new Date(startTimeInput.value);
         var endTimeValue = new Date(endTimeInput.value);
 
-        // 驗證開始時間不晚於結束時間
         if (startTimeValue > endTimeValue) {
-            alert('開始時間不能晚於結束時間');
-            startTimeInput.value = ''; // 清空開始時間欄位
+            alert('開始時間不能晚於結束時間。');
+            startTimeInput.value = '';
         }
     });
 </script>
@@ -312,67 +334,58 @@ function redirectToSelectSeat() {
     <b><label for="endtime">開始時間： </label></b>
     <br>
     <input type="datetime-local" class="form-control" required="required" name="starttime" id="starttime" placeholder="starttime" style="width:30%;height: 40px;">
-    </div>
-    <br>
-    <!-- 結束時間 -->
-    <div align="center">
+
+</div>
+<br>
+<div align="center">
     <b><label for="endtime">結束時間:</label></b>
-        <br>
-        <input type="datetime-local" class="form-control" required="required" name="endtime" id="endtime" placeholder="endtime" style="width:30%;height: 40px;">
-    </div>
-    <script>
-            // 獲取開始時間和結束時間的 input 元素
-            var startTimeInput = document.getElementById('starttime');
-            var endTimeInput = document.getElementById('endtime');
-            // 当开始时间改变时执行验证
-            startTimeInput.addEventListener('change', function() {
-            // 获取开始时间的值
-            var startTimeValue = new Date(startTimeInput.value);
-        
-            // 获取当天8:00的时间
-             var libraryOpeningTime = new Date();
-            libraryOpeningTime.setHours(8, 0, 0, 0); // 设置为当天的8:00
-        
-            // 验证开始时间不早于图书馆开馆时间（早上8:00）
-            if (startTimeValue < libraryOpeningTime) {
-            alert('圖書館早上8:00才開館喔！');
-            startTimeInput.value = ''; // 清空开始时间字段
-            }
-            });
-            // 當結束時間改變時執行驗證
-            endTimeInput.addEventListener('change', function() {
-                // 獲取開始時間和結束時間的值
-                var startTimeValue = new Date(startTimeInput.value);
-                var endTimeValue = new Date(endTimeInput.value);
-                // 获取当天 23:00 的时间
-                var libraryClosingTime = new Date();
-                libraryClosingTime.setHours(23, 0, 0, 0); // 设置为当天的23:00
-    
-                 // 驗證結束時間不晚於圖書館關閉時間（晚上23:00）
-                if (endTimeValue > libraryClosingTime) {
-                 alert('圖書館晚上11:00就閉館囉！');
-                endTimeInput.value = ''; // 清空結束時間欄位
-                }
-                // 驗證結束時間不早於開始時間
-                else if (endTimeValue < startTimeValue) {
-                    alert('結束時間不能早於開始時間');
-                    endTimeInput.value = ''; // 清空結束時間欄位
-                }
-            });
+    <br>
+    <input type="datetime-local" class="form-control" required="required" name="endtime" id="endtime" placeholder="endtime" style="width:30%;height: 40px;">
 
-            // 當開始時間改變時執行驗證
-            startTimeInput.addEventListener('change', function() {
-                // 獲取開始時間和結束時間的值
-                var startTimeValue = new Date(startTimeInput.value);
-                var endTimeValue = new Date(endTimeInput.value);
+</div>
 
-                // 驗證開始時間不晚於結束時間
-                if (startTimeValue > endTimeValue) {
-                    alert('開始時間不能晚於結束時間');
-                    startTimeInput.value = ''; // 清空開始時間欄位
-                }
-            });
-            </script>
+<script>
+    var startTimeInput = document.getElementById('starttime');
+    var endTimeInput = document.getElementById('endtime');
+
+    startTimeInput.addEventListener('change', function() {
+        var startTimeValue = new Date(startTimeInput.value);
+        var currentDate = new Date(); // 獲取目前的日期和時間
+
+        var libraryOpeningTime = new Date(startTimeValue);
+        libraryOpeningTime.setHours(8, 0, 0, 0); // 根據所選日期設定圖書館開放時間為早上 8 點
+
+        if (startTimeValue < currentDate || startTimeValue < libraryOpeningTime) {
+            alert('圖書館早上 8 點才開喔~');
+            startTimeInput.value = '';
+        }
+    });
+
+    endTimeInput.addEventListener('change', function() {
+        var startTimeValue = new Date(startTimeInput.value);
+        var endTimeValue = new Date(endTimeInput.value);
+        var currentDate = new Date();
+
+        var libraryClosingTime = new Date(startTimeValue);
+        libraryClosingTime.setHours(22, 0, 0, 0); // 根據所選日期設定圖書館關閉時間為晚上 10 點
+
+        if (endTimeValue > libraryClosingTime || endTimeValue < startTimeValue || endTimeValue < currentDate) {
+            alert('圖書館晚上 10 點閉館喔！');
+            endTimeInput.value = '';
+        }
+    });
+
+    // 當開始時間改變時的額外結束時間驗證
+    startTimeInput.addEventListener('change', function() {
+        var startTimeValue = new Date(startTimeInput.value);
+        var endTimeValue = new Date(endTimeInput.value);
+
+        if (startTimeValue > endTimeValue) {
+            alert('開始時間不能晚於結束時間。');
+            startTimeInput.value = '';
+        }
+    });
+</script>
     <br>
             <div align="center">
             <b><label for="endtime">座位樓層: </label></b>
