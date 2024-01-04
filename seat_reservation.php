@@ -228,10 +228,10 @@ th {
 
 
             <label for="starttime">開始時間:</label>
-            <input type="datetime-local" id="starttime" name="starttime" value="" min="<?php echo date('Y-m-d\TH:i'); ?>" max="<?php echo date('Y-m-d\TH:i', strtotime('+0 day')); ?>"><br><br>
+<input type="datetime-local" id="starttime" name="starttime" value="" min="<?php echo date('Y-m-d\TH:i'); ?>" max="<?php echo date('Y-m-d\TH:i', strtotime('+0 day')); ?>" style="width: 200px;"><br><br>
 
-            <label for="endtime">結束時間:</label>
-            <input type="datetime-local" id="endtime" name="endtime" value="" min="<?php echo date('Y-m-d\TH:i'); ?>" max="<?php echo date('Y-m-d\TH:i', strtotime('+0 day')); ?>"><br><br>
+<label for="endtime">結束時間:</label>
+<input type="datetime-local" id="endtime" name="endtime" value="" min="<?php echo date('Y-m-d\TH:i'); ?>" max="<?php echo date('Y-m-d\TH:i', strtotime('+0 day')); ?>" style="width: 200px;"><br><br>
 
             <script>
             var startTimeInput = document.getElementById('starttime');
