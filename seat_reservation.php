@@ -328,9 +328,9 @@ th {
                     if (isset($_POST['starttime']) && isset($_POST['endtime'])) {
                         $start_time = $_POST['starttime'];
                         $end_time = $_POST['endtime'];
-                        $seat_id = $_POST['seat_id']; // 假設有 seat_id 作為座位的唯一識別符號
+                        $seat_id = $seat_id; // 获取座位ID
                     
-                        // 檢查是否有重複預約或時間衝突
+                        // 检查是否有重复预约或时间冲突
                         $check_duplicate_query = "SELECT * FROM reservation WHERE Seat_Id = ? AND ((Start_Time <= ? AND End_Time >= ?) OR (Start_Time <= ? AND End_Time >= ?))";
                         $stmt = $conn->prepare($check_duplicate_query);
                         $stmt->bind_param("issss", $seat_id, $start_time, $start_time, $end_time, $end_time);
@@ -338,24 +338,27 @@ th {
                         $result = $stmt->get_result();
                     
                         if ($result->num_rows > 0) {
-                            echo '<script>alert("預約錯誤！該時段已被預約或有時間衝突。請重新預約。");</script>';
+                            echo '<script>alert("預約錯誤！該時段已有人預約或預約時間有重疊。請重新預約!");</script>';
                             echo '<script>';
-                            echo 'document.getElementById("starttime").value = "";'; // 清空開始時間
-                            echo 'document.getElementById("endtime").value = "";'; // 清空結束時間
+                            echo 'document.getElementById("starttime").value = "";'; // 清空开始时间
+                            echo 'document.getElementById("endtime").value = "";'; // 清空结束时间
                             echo '</script>';
                         } else {
-                            // 執行預約
+                            // 执行预约
                             $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id) VALUES (?, ?, ?, ?)";
                             $stmt = $conn->prepare($insert_query);
+                    
+                            // 假设 $user_id 是已定义的用户ID变量
                             $stmt->bind_param("ssii", $start_time, $end_time, $user_id, $seat_id);
                     
                             if ($stmt->execute()) {
-                                echo '<script>alert("您預約成功了！");</script>';
-                                echo '<script>window.location.href = "reservation.php";</script>';
+                                echo '<script>alert("您预约成功了！");</script>';
+                                echo '<script>window.location.href = "user_reservation.php";</script>';
                             } else {
-                                echo "發生錯誤: " . $stmt->error;
+                                echo "发生错误: " . $stmt->error;
                             }
                         }
+                    
                     } else {
                         echo  '<script>alert("請輸入開始時間和結束時間");</script>';
                     }
