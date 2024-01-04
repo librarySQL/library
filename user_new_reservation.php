@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -189,13 +189,12 @@ th {
 		.edit-button {
 		background-color: #feeba8;
 		color: #3e3e3e; 
-		padding: 3px 6px; /* 調整按鈕的大小 */
+		padding: 3px 6px;
 		border: none;
 		border-radius: 5px;
 		cursor: pointer;
 		text-decoration: none;
-		font-size: 18.5px;
-		margin: 0.01px; /* 調整按鈕的外邊距 */
+		font-size: 16px;
 		}
 
 		.edit-button:hover {
@@ -227,6 +226,13 @@ th {
 		font-size: 18.5px;
 		margin: 0.01px; /* 調整按鈕的外邊距 */
 		}
+        
+        .flatpickr-calendar {
+        transform: scale(0.85); /* 縮小日曆大小為原來的 80% */
+        transform-origin: top left; /* 設置縮放原點，使其從左上角開始縮放 */
+        }
+        
+
 </style>
    
      <!-- 其他標頭內容 -->
@@ -269,46 +275,7 @@ function redirectToSelectSeat() {
     form.submit();
 }
 
-var startTimeInput = document.getElementById('starttime');
-    var endTimeInput = document.getElementById('endtime');
 
-    startTimeInput.addEventListener('change', function() {
-        var startTimeValue = new Date(startTimeInput.value);
-        var currentDate = new Date(); // 獲取目前的日期和時間
-
-        var libraryOpeningTime = new Date(startTimeValue);
-        libraryOpeningTime.setHours(8, 0, 0, 0); // 根據所選日期設定圖書館開放時間為早上 8 點
-
-        if (startTimeValue < currentDate || startTimeValue < libraryOpeningTime) {
-            alert('請選擇有效的開始時間，在所選日期的早上 8 點後。');
-            startTimeInput.value = '';
-        }
-    });
-
-    endTimeInput.addEventListener('change', function() {
-        var startTimeValue = new Date(startTimeInput.value);
-        var endTimeValue = new Date(endTimeInput.value);
-        var currentDate = new Date();
-
-        var libraryClosingTime = new Date(startTimeValue);
-        libraryClosingTime.setHours(22, 0, 0, 0); // 根據所選日期設定圖書館關閉時間為晚上 10 點
-
-        if (endTimeValue > libraryClosingTime || endTimeValue < startTimeValue || endTimeValue < currentDate) {
-            alert('請選擇有效的結束時間，在所選日期的晚上 10 點前，並且晚於開始時間。');
-            endTimeInput.value = '';
-        }
-    });
-
-    // 當開始時間改變時的額外結束時間驗證
-    startTimeInput.addEventListener('change', function() {
-        var startTimeValue = new Date(startTimeInput.value);
-        var endTimeValue = new Date(endTimeInput.value);
-
-        if (startTimeValue > endTimeValue) {
-            alert('開始時間不能晚於結束時間。');
-            startTimeInput.value = '';
-        }
-    });
 </script>
 
 </head>
@@ -316,7 +283,7 @@ var startTimeInput = document.getElementById('starttime');
 <div class="navbar">
     <a href="userstatus.php">會員</a>
     <a href="seat.php">座位一覽</a>
-    <a href="reservation.php">預約紀錄</a>
+    <a href="user_reservation.php">預約紀錄</a>
     <a href="user_new_reservation.php">預約座位</a>
     <a href="search_seat.php">查詢座位</a>
     
@@ -330,60 +297,77 @@ var startTimeInput = document.getElementById('starttime');
     <div class="container" style="width: 700px;margin: 0px auto; top:50px; margin-bottom 200px; font-family:Microsoft JhengHei;">
     <form id="reservationForm" class="form-signin" role="form" onsubmit="redirectToSelectSeat(); return false;">
     <!-- 開始時間 -->
-    <div align="center">
-    <b><label for="endtime">開始時間： </label></b>
-    <br>
-    <input type="datetime-local" class="form-control" required="required" name="starttime" id="starttime" placeholder="starttime" style="width:30%;height: 40px;">
 
-</div>
-<br>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <div align="center">
-    <b><label for="endtime">結束時間:</label></b>
-    <br>
-    <input type="datetime-local" class="form-control" required="required" name="endtime" id="endtime" placeholder="endtime" style="width:30%;height: 40px;">
+    
+    <label for="starttime"><b>開始時間:</b></label><br>
+    <input type="text" id="starttime" name="starttime" placeholder="選擇開始時間" readonly style="width: 200px; height: 40px; font-size: 16px;">
+    <br><br>
+    <label for="endtime"><b>結束時間:</b></label><br>
+    <input type="text" id="endtime" name="endtime" placeholder="選擇結束時間" readonly style="width: 200px; height: 40px; font-size: 16px;">
 
 </div>
-
 <script>
-    var startTimeInput = document.getElementById('starttime');
-    var endTimeInput = document.getElementById('endtime');
+    document.addEventListener('DOMContentLoaded', function () {
+        var startTimeInput = flatpickr("#starttime", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today",
+            onClose: function (selectedDates, dateStr, instance) {
+                var selectedStartTime = new Date(dateStr);
+                var libraryOpeningTime = new Date(selectedStartTime);
+                libraryOpeningTime.setHours(8, 0, 0, 0); // Set library opening time to 8:00 AM
 
-    startTimeInput.addEventListener('change', function() {
-        var startTimeValue = new Date(startTimeInput.value);
-        var currentDate = new Date(); // 獲取目前的日期和時間
+                var selectedEndTime = new Date(document.getElementById('endtime').value);
+                var libraryClosingTime = new Date(selectedEndTime);
+                libraryClosingTime.setHours(22, 0, 0, 0); // Set library closing time to 10:00 PM
 
-        var libraryOpeningTime = new Date(startTimeValue);
-        libraryOpeningTime.setHours(8, 0, 0, 0); // 根據所選日期設定圖書館開放時間為早上 8 點
+                if (selectedStartTime < libraryOpeningTime) {
+                    alert('圖書館8:00才開門喔');
+                    document.getElementById('starttime').value = ''; // Reset start time field to empty
+                } else if (selectedEndTime > libraryClosingTime) {
+                    alert('圖書館晚上10:00就閉館囉');
+                    document.getElementById('starttime').value = ''; // Reset start time field to empty
+                    document.getElementById('endtime').value = ''; // Reset end time field to empty
+                } else if (selectedStartTime > selectedEndTime) {
+                    alert('開始時間不能晚於結束時間。');
+                    document.getElementById('starttime').value = ''; // Reset start time field to empty
+                    document.getElementById('endtime').value = ''; // Reset end time field to empty
+                }
+            }
+        });
 
-        if (startTimeValue < currentDate || startTimeValue < libraryOpeningTime) {
-            alert('圖書館早上 8 點才開喔~');
-            startTimeInput.value = '';
-        }
-    });
+        var endTimeInput = flatpickr("#endtime", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today",
+            onClose: function (selectedDates, dateStr, instance) {
+                var selectedEndTime = new Date(dateStr);
+                var libraryClosingTime = new Date(selectedEndTime);
+                libraryClosingTime.setHours(22, 0, 0, 0); // Set library closing time to 10:00 PM
 
-    endTimeInput.addEventListener('change', function() {
-        var startTimeValue = new Date(startTimeInput.value);
-        var endTimeValue = new Date(endTimeInput.value);
-        var currentDate = new Date();
+                var selectedStartTime = new Date(document.getElementById('starttime').value);
+                var libraryOpeningTime = new Date(selectedStartTime);
+                libraryOpeningTime.setHours(8, 0, 0, 0); // Set library opening time to 8:00 AM
 
-        var libraryClosingTime = new Date(startTimeValue);
-        libraryClosingTime.setHours(22, 0, 0, 0); // 根據所選日期設定圖書館關閉時間為晚上 10 點
-
-        if (endTimeValue > libraryClosingTime || endTimeValue < startTimeValue || endTimeValue < currentDate) {
-            alert('圖書館晚上 10 點閉館喔！');
-            endTimeInput.value = '';
-        }
-    });
-
-    // 當開始時間改變時的額外結束時間驗證
-    startTimeInput.addEventListener('change', function() {
-        var startTimeValue = new Date(startTimeInput.value);
-        var endTimeValue = new Date(endTimeInput.value);
-
-        if (startTimeValue > endTimeValue) {
-            alert('開始時間不能晚於結束時間。');
-            startTimeInput.value = '';
-        }
+                if (selectedStartTime < libraryOpeningTime) {
+                    alert('圖書館8:00才開門喔');
+                    document.getElementById('starttime').value = ''; // Reset start time field to empty
+                } else if (selectedEndTime > libraryClosingTime) {
+                    alert('圖書館晚上10:00就閉館囉');
+                    document.getElementById('starttime').value = ''; // Reset start time field to empty
+                    document.getElementById('endtime').value = ''; // Reset end time field to empty
+                } else if (selectedEndTime < selectedStartTime) {
+                    alert('結束時間不能早於開始時間。');
+                    document.getElementById('starttime').value = ''; // Reset start time field to empty
+                    document.getElementById('endtime').value = ''; // Reset end time field to empty
+                }
+            }
+        });
     });
 </script>
     <br>
