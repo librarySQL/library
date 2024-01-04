@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$conn = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -325,28 +325,30 @@ th {
                     $seat_row = $seat_result->fetch_assoc();
                     $seat_id = $seat_row['Seat_Id'];
 
-                    if (isset($start_time) && isset($end_time)) {
+                    if (isset($_POST['starttime']) && isset($_POST['endtime'])) {
                         $start_time = $_POST['starttime'];
                         $end_time = $_POST['endtime'];
-
-                        $check_duplicate_query = "SELECT * FROM reservation WHERE Start_Time = ? AND End_Time = ? AND Seat_Id = ?";
+                        $seat_id = $_POST['seat_id']; // 假設有 seat_id 作為座位的唯一識別符號
+                    
+                        // 檢查是否有重複預約或時間衝突
+                        $check_duplicate_query = "SELECT * FROM reservation WHERE Seat_Id = ? AND ((Start_Time <= ? AND End_Time >= ?) OR (Start_Time <= ? AND End_Time >= ?))";
                         $stmt = $conn->prepare($check_duplicate_query);
-                        $stmt->bind_param("ssi", $start_time, $end_time, $seat_id);
+                        $stmt->bind_param("issss", $seat_id, $start_time, $start_time, $end_time, $end_time);
                         $stmt->execute();
                         $result = $stmt->get_result();
-                
+                    
                         if ($result->num_rows > 0) {
-                            echo '<script>alert("預約錯誤！請重新預約。");</script>';
+                            echo '<script>alert("預約錯誤！該時段已被預約或有時間衝突。請重新預約。");</script>';
                             echo '<script>';
                             echo 'document.getElementById("starttime").value = "";'; // 清空開始時間
                             echo 'document.getElementById("endtime").value = "";'; // 清空結束時間
-                            
                             echo '</script>';
                         } else {
+                            // 執行預約
                             $insert_query = "INSERT INTO reservation (Start_Time, End_Time, User_Id, Seat_Id) VALUES (?, ?, ?, ?)";
                             $stmt = $conn->prepare($insert_query);
                             $stmt->bind_param("ssii", $start_time, $end_time, $user_id, $seat_id);
-                
+                    
                             if ($stmt->execute()) {
                                 echo '<script>alert("您預約成功了！");</script>';
                                 echo '<script>window.location.href = "reservation.php";</script>';
@@ -361,7 +363,7 @@ th {
                             echo "<script>document.getElementById('seatfloor').value = '$seatfloor';</script>";
                             echo "<script>document.getElementById('socket').value = '$socket';</script>";
                 } else {
-                    echo "找不到相應的座位名稱";
+                    echo '<script>alert("找不到相應的座位名稱");</script>';
                 }
             } else {
                 echo "找不到相應的使用者帳號";
