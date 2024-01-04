@@ -201,12 +201,12 @@ th {
 		font-size: 18.5px;
 		margin: 0.01px; /* 調整按鈕的外邊距 */
 		}
-        
+         
         .flatpickr-calendar {
         transform: scale(0.85); /* 縮小日曆大小為原來的 80% */
         transform-origin: top left; /* 設置縮放原點，使其從左上角開始縮放 */
         }
-        
+         
 
 </style>
 </head>
@@ -242,55 +242,46 @@ th {
 <!-- 選擇開始時間與結束時間 -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <label for="starttime">開始時間:</label>
-    <input type="text" id="starttime" name="starttime" placeholder="選擇開始時間" readonly>
-    <br><br>
-    <label for="endtime">結束時間:</label>
-    <input type="text" id="endtime" name="endtime" placeholder="選擇結束時間" readonly>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var startTimeInput = flatpickr("#starttime", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            onClose: function (selectedDates, dateStr, instance) {
-                var selectedStartTime = new Date(dateStr);
-                var libraryOpeningTime = new Date(selectedStartTime);
-                libraryOpeningTime.setHours(8, 0, 0, 0); // 设置图书馆开放时间为早上8点
-
-                if (selectedStartTime < libraryOpeningTime) {
-                    alert('圖書館早上8點才開門！');
-                    startTimeInput._flatpickr.clear(); // 清空开始时间栏位
-                }
+  <input type="text" id="starttime" name="starttime" placeholder="選擇開始時間" readonly>
+  <br><br>
+  <label for="endtime">結束時間:</label>
+  <input type="text" id="endtime" name="endtime" placeholder="選擇結束時間" readonly>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+    var startTimeInput = flatpickr("#starttime", {
+        enableTime: true,
+        minTime: "8:00",
+        maxTime: "22:00",
+        dateFormat: "Y-m-d H:i", // 添加日期時間格式
+        onClose: function(selectedDates, dateStr, instance) {
+            var selectedStartTime = new Date(dateStr);
+            var selectedEndTime = new Date(document.getElementById('endtime').value);
+            if (selectedStartTime > selectedEndTime) {
+                alert('開始時間不能晚於結束時間。');
+                location.reload(); // 刷新頁面
             }
-        });
-
-        var endTimeInput = flatpickr("#endtime", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            onClose: function (selectedDates, dateStr, instance) {
-                var selectedEndTime = new Date(dateStr);
-                var libraryClosingTime = new Date(selectedEndTime);
-                libraryClosingTime.setHours(22, 0, 0, 0); // 设置图书馆关闭时间为晚上10点
-
-                if (selectedEndTime > libraryClosingTime) {
-                    alert('圖書館晚上10點就閉館囉！');
-                    endTimeInput._flatpickr.clear(); // 清空结束时间栏位
-                }
-
-                // 时间检查 - 开始时间不能晚于结束时间
-                var selectedStartTime = startTimeInput.latestSelectedDateObj;
-                if (selectedStartTime && selectedEndTime) {
-                    if (selectedStartTime > selectedEndTime) {
-                        alert('開始時間不能晚於结束時間。');
-                        endTimeInput._flatpickr.clear(); // 清空结束时间栏位
-                    }
-                }
-            }
-        });
+        }
     });
+
+    var endTimeInput = flatpickr("#endtime", {
+        enableTime: true,
+        minTime: "8:00",
+        maxTime: "22:00",
+        dateFormat: "Y-m-d H:i", // 添加日期時間格式
+        onClose: function(selectedDates, dateStr, instance) {
+            var selectedEndTime = new Date(dateStr);
+            var selectedStartTime = new Date(document.getElementById('starttime').value);
+            if (selectedStartTime > selectedEndTime) {
+                alert('開始時間不能晚於結束時間。');
+                location.reload(); // 刷新頁面
+            }
+        }
+    });
+});
 </script>
+
 
 <br><br>
            <!-- 在表单中显示座位樓層和插座信息 -->
