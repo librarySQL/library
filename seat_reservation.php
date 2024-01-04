@@ -234,58 +234,55 @@ th {
             <input type="datetime-local" id="endtime" name="endtime" value="" ><br><br>
 
             <script>
-            // 獲取開始時間和結束時間的 input 元素
             var startTimeInput = document.getElementById('starttime');
             var endTimeInput = document.getElementById('endtime');
-            // 当开始时间改变时执行验证
+
             startTimeInput.addEventListener('change', function() {
-            // 获取开始时间的值
-            var startTimeValue = new Date(startTimeInput.value);
-        
-            // 获取当天8:00的时间
-             var libraryOpeningTime = new Date();
-            libraryOpeningTime.setHours(8, 0, 0, 0); // 设置为当天的8:00
-        
-            // 验证开始时间不早于图书馆开馆时间（早上8:00）
-            if (startTimeValue < libraryOpeningTime) {
-            alert('圖書館早上8:00才開館喔！');
-            startTimeInput.value = ''; // 清空开始时间字段
-            }
+                var selectedStartTime = new Date(startTimeInput.value);
+                var currentDate = new Date();
+
+                if (selectedStartTime.getDate() !== currentDate.getDate() ||
+                    selectedStartTime.getMonth() !== currentDate.getMonth() ||
+                    selectedStartTime.getFullYear() !== currentDate.getFullYear()) {
+                    alert('只能預約當天的座位!請重新預約!');
+                    startTimeInput.value = '';
+                }
             });
-            // 當結束時間改變時執行驗證
+
             endTimeInput.addEventListener('change', function() {
-                // 獲取開始時間和結束時間的值
-                var startTimeValue = new Date(startTimeInput.value);
-                var endTimeValue = new Date(endTimeInput.value);
-                // 获取当天 23:00 的时间
-                var libraryClosingTime = new Date();
-                libraryClosingTime.setHours(22, 0, 0, 0); // 设置为当天的23:00
-    
-                 // 驗證結束時間不晚於圖書館關閉時間（晚上22:00）
-                if (endTimeValue > libraryClosingTime) {
-                 alert('圖書館晚上10:00就閉館囉！');
-                endTimeInput.value = ''; // 清空結束時間欄位
-                }
-                // 驗證結束時間不早於開始時間
-                else if (endTimeValue < startTimeValue) {
-                    alert('結束時間不能早於開始時間');
-                    endTimeInput.value = ''; // 清空結束時間欄位
+                var selectedEndTime = new Date(endTimeInput.value);
+                var currentDate = new Date();
+
+                if (selectedEndTime.getDate() !== currentDate.getDate() ||
+                    selectedEndTime.getMonth() !== currentDate.getMonth() ||
+                    selectedEndTime.getFullYear() !== currentDate.getFullYear()) {
+                    alert('只能預約當天的座位!請重新預約!');
+                    endTimeInput.value = '';
                 }
             });
 
-            // 當開始時間改變時執行驗證
             startTimeInput.addEventListener('change', function() {
-                // 獲取開始時間和結束時間的值
-                var startTimeValue = new Date(startTimeInput.value);
-                var endTimeValue = new Date(endTimeInput.value);
+                var selectedStartTime = new Date(startTimeInput.value);
+                var selectedEndTime = new Date(endTimeInput.value);
 
-                // 驗證開始時間不晚於結束時間
-                if (startTimeValue > endTimeValue) {
-                    alert('開始時間不能晚於結束時間');
-                    startTimeInput.value = ''; // 清空開始時間欄位
+                if (selectedStartTime > selectedEndTime) {
+                    alert('Start time cannot be later than end time.');
+                    startTimeInput.value = '';
                 }
             });
-            </script>
+
+            endTimeInput.addEventListener('change', function() {
+                var selectedStartTime = new Date(startTimeInput.value);
+                var selectedEndTime = new Date(endTimeInput.value);
+
+                if (selectedEndTime < selectedStartTime) {
+                    alert('End time cannot be earlier than start time.');
+                    endTimeInput.value = '';
+                }
+            });
+        </script>
+
+
            <!-- 在表单中显示座位樓層和插座信息 -->
             <label for="seatfloor">座位樓層:</label>
             <input type="text" id="seatfloor" name="seatfloor" value="<?php echo htmlspecialchars($seatFloor); ?>" readonly><br><br>
@@ -331,11 +328,14 @@ th {
                         $seat_id = $seat_id; // 获取座位ID
                     
                         // 检查是否有重复预约或时间冲突
-                        $check_duplicate_query = "SELECT * FROM reservation WHERE Seat_Id = ? AND ((Start_Time <= ? AND End_Time >= ?) OR (Start_Time <= ? AND End_Time >= ?))";
+                        $check_duplicate_query = "SELECT * FROM reservation 
+                            WHERE Seat_Id = ? AND ((Start_Time < ? AND End_Time > ?) OR (Start_Time < ? AND End_Time > ?) OR (Start_Time >= ? AND End_Time <= ?))";
                         $stmt = $conn->prepare($check_duplicate_query);
-                        $stmt->bind_param("issss", $seat_id, $start_time, $start_time, $end_time, $end_time);
+                        $stmt->bind_param("issssss", $seat_id, $start_time, $start_time, $end_time, $end_time, $start_time, $end_time);
+
                         $stmt->execute();
                         $result = $stmt->get_result();
+
                     
                         if ($result->num_rows > 0) {
                             echo '<script>alert("預約錯誤！該時段已有人預約或預約時間有重疊。請重新預約!");</script>';
