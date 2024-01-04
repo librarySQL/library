@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
@@ -12,15 +12,13 @@ $selected_seat = ""; // 初始化選中的座位變數
 if (isset($_POST['seatname']) && !empty($_POST['seatname'])) {
     $selected_seat = $_POST['seatname'];
 
-    $current_date = date('Y-m-d'); // 當前日期
-    $current_time = date('H:i:s'); // 當前時間
+    $current_date_time = date('Y-m-d H:i:s'); // 當前日期和時間
 
     $check_reservation_query = "SELECT r.Start_Time, r.End_Time, s.Seat_Name, s.Seat_Floor, s.Socket
     FROM reservation r
     INNER JOIN seat s ON r.Seat_Id = s.Seat_Id
     WHERE s.Seat_Name = '$selected_seat' 
-    AND ((r.Start_Time <= NOW() AND r.End_Time >= NOW()) OR 
-         (DATE(r.Start_Time) = '$current_date' AND TIME(r.Start_Time) >= '$current_time'))
+    AND ((r.Start_Time >= '$current_date_time') OR (r.End_Time >= '$current_date_time'))
     ORDER BY r.Start_Time ASC";
 
     $reservation_result = $con->query($check_reservation_query);
