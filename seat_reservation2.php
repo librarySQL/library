@@ -203,7 +203,7 @@ th {
 		}
         
         .flatpickr-calendar {
-        transform: scale(0.80); /* 縮小日曆大小為原來的 80% */
+        transform: scale(0.85); /* 縮小日曆大小為原來的 80% */
         transform-origin: top left; /* 設置縮放原點，使其從左上角開始縮放 */
         }
         
