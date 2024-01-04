@@ -201,6 +201,13 @@ th {
 		font-size: 18.5px;
 		margin: 0.01px; /* 調整按鈕的外邊距 */
 		}
+        
+        .flatpickr-calendar {
+        transform: scale(0.80); /* 縮小日曆大小為原來的 80% */
+        transform-origin: top left; /* 設置縮放原點，使其從左上角開始縮放 */
+        }
+        
+
 </style>
 </head>
 
@@ -246,7 +253,7 @@ th {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
             minDate: "today",
-            maxDate: "today",
+            
             onClose: function (selectedDates, dateStr, instance) {
                 var selectedStartTime = new Date(dateStr);
                 var libraryOpeningTime = new Date(selectedStartTime);
@@ -256,14 +263,14 @@ th {
                     alert('圖書館8:00才開門喔');
                     startTimeInput._flatpickr.clear(); // 清空開始時間欄位
                 }
-            }
+            } 
+            
         });
 
         var endTimeInput = flatpickr("#endtime", {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
             minDate: "today",
-            maxDate: "today",
             onClose: function (selectedDates, dateStr, instance) {
                 var selectedEndTime = new Date(dateStr);
                 var libraryClosingTime = new Date(selectedEndTime);
