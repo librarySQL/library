@@ -253,18 +253,16 @@ th {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
             minDate: "today",
-            
             onClose: function (selectedDates, dateStr, instance) {
                 var selectedStartTime = new Date(dateStr);
                 var libraryOpeningTime = new Date(selectedStartTime);
-                libraryOpeningTime.setHours(8, 0, 0, 0); // 設置圖書館開放時間為早上8點
+                libraryOpeningTime.setHours(8, 0, 0, 0); // 设置图书馆开放时间为早上8点
 
                 if (selectedStartTime < libraryOpeningTime) {
-                    alert('圖書館8:00才開門喔');
-                    startTimeInput._flatpickr.clear(); // 清空開始時間欄位
+                    alert('圖書館早上8點才開門！');
+                    startTimeInput._flatpickr.clear(); // 清空开始时间栏位
                 }
-            } 
-            
+            }
         });
 
         var endTimeInput = flatpickr("#endtime", {
@@ -274,41 +272,26 @@ th {
             onClose: function (selectedDates, dateStr, instance) {
                 var selectedEndTime = new Date(dateStr);
                 var libraryClosingTime = new Date(selectedEndTime);
-                libraryClosingTime.setHours(22, 0, 0, 0); // 設置圖書館開放時間為晚上10點
+                libraryClosingTime.setHours(22, 0, 0, 0); // 设置图书馆关闭时间为晚上10点
 
                 if (selectedEndTime > libraryClosingTime) {
-                    alert('圖書館晚上10:00就閉館囉');
-                    endTimeInput._flatpickr.clear(); // 清空結束時間欄位
+                    alert('圖書館晚上10點就閉館囉！');
+                    endTimeInput._flatpickr.clear(); // 清空结束时间栏位
                 }
-            }
-        });
-        
-        // 時間檢查
-        startTimeInput.config.onChange.push(function(selectedDates, dateStr, instance) {
-            var selectedStartTime = startTimeInput.latestSelectedDateObj; // 取得最新選擇的時間
-            var selectedEndTime = endTimeInput.latestSelectedDateObj;
 
-            if (selectedStartTime && selectedEndTime) { // 檢查兩個時間是否都已選擇
-                if (selectedStartTime > selectedEndTime) {
-                    alert('開始時間不能晚於結束時間。');
-                    startTimeInput.clear(); // 清空開始時間
-                }
-            }
-        });
-
-        endTimeInput.config.onChange.push(function(selectedDates, dateStr, instance) {
-            var selectedStartTime = startTimeInput.latestSelectedDateObj;
-            var selectedEndTime = endTimeInput.latestSelectedDateObj;
-
-            if (selectedStartTime && selectedEndTime) {
-                if (selectedEndTime < selectedStartTime) {
-                    alert('結束時間不能早於開始時間。');
-                    endTimeInput.clear(); // 清空結束時間
+                // 时间检查 - 开始时间不能晚于结束时间
+                var selectedStartTime = startTimeInput.latestSelectedDateObj;
+                if (selectedStartTime && selectedEndTime) {
+                    if (selectedStartTime > selectedEndTime) {
+                        alert('開始時間不能晚於结束時間。');
+                        endTimeInput._flatpickr.clear(); // 清空结束时间栏位
+                    }
                 }
             }
         });
     });
 </script>
+
 <br><br>
            <!-- 在表单中显示座位樓層和插座信息 -->
             <label for="seatfloor">座位樓層:</label>
