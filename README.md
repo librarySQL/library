@@ -23,6 +23,7 @@
 - 將被選擇的座位的預約紀錄給顯示出來回傳到search_seat的頁面上做顯示
 ### [seat_reservation](https://github.com/librarySQL/library/blob/main/seat_reservation.php)
 - 將使用者在search seat選擇的seat傳入並且同步顯示該座位的樓層與插座內容
+- 時間選擇有設定為圖書館開館8:00及閉館22:00
 - 在使用者輸入開始時間與結束時間後按下預約座位的button後就會挑出新增成功的alert並跳轉到reservation
 - 預設為A1，進入頁面會直接顯示A1的狀態
 
