@@ -311,65 +311,41 @@ function redirectToSelectSeat() {
     <input type="text" id="endtime" name="endtime" placeholder="選擇結束時間" readonly style="width: 200px; height: 40px; font-size: 16px;">
 
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var startTimeInput = flatpickr("#starttime", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            onClose: function (selectedDates, dateStr, instance) {
-                var selectedStartTime = new Date(dateStr);
-                var libraryOpeningTime = new Date(selectedStartTime);
-                libraryOpeningTime.setHours(8, 0, 0, 0); // Set library opening time to 8:00 AM
-
-                var selectedEndTime = new Date(document.getElementById('endtime').value);
-                var libraryClosingTime = new Date(selectedEndTime);
-                libraryClosingTime.setHours(22, 0, 0, 0); // Set library closing time to 10:00 PM
-
-                if (selectedStartTime < libraryOpeningTime) {
-                    alert('圖書館8:00才開門喔');
-                    document.getElementById('starttime').value = ''; // Reset start time field to empty
-                } else if (selectedEndTime > libraryClosingTime) {
-                    alert('圖書館晚上10:00就閉館囉');
-                    document.getElementById('starttime').value = ''; // Reset start time field to empty
-                    document.getElementById('endtime').value = ''; // Reset end time field to empty
-                } else if (selectedStartTime > selectedEndTime) {
-                    alert('開始時間不能晚於結束時間。');
-                    document.getElementById('starttime').value = ''; // Reset start time field to empty
-                    document.getElementById('endtime').value = ''; // Reset end time field to empty
-                }
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+    var startTimeInput = flatpickr("#starttime", {
+        enableTime: true,
+        minTime: "8:00",
+        maxTime: "22:00",
+        dateFormat: "Y-m-d H:i", // 添加日期時間格式
+        onClose: function(selectedDates, dateStr, instance) {
+            var selectedStartTime = new Date(dateStr);
+            var selectedEndTime = new Date(document.getElementById('endtime').value);
+            if (selectedStartTime > selectedEndTime) {
+                alert('開始時間不能晚於結束時間。');
+                location.reload(); // 刷新頁面
             }
-        });
-
-        var endTimeInput = flatpickr("#endtime", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            onClose: function (selectedDates, dateStr, instance) {
-                var selectedEndTime = new Date(dateStr);
-                var libraryClosingTime = new Date(selectedEndTime);
-                libraryClosingTime.setHours(22, 0, 0, 0); // Set library closing time to 10:00 PM
-
-                var selectedStartTime = new Date(document.getElementById('starttime').value);
-                var libraryOpeningTime = new Date(selectedStartTime);
-                libraryOpeningTime.setHours(8, 0, 0, 0); // Set library opening time to 8:00 AM
-
-                if (selectedStartTime < libraryOpeningTime) {
-                    alert('圖書館8:00才開門喔');
-                    document.getElementById('starttime').value = ''; // Reset start time field to empty
-                } else if (selectedEndTime > libraryClosingTime) {
-                    alert('圖書館晚上10:00就閉館囉');
-                    document.getElementById('starttime').value = ''; // Reset start time field to empty
-                    document.getElementById('endtime').value = ''; // Reset end time field to empty
-                } else if (selectedEndTime < selectedStartTime) {
-                    alert('結束時間不能早於開始時間。');
-                    document.getElementById('starttime').value = ''; // Reset start time field to empty
-                    document.getElementById('endtime').value = ''; // Reset end time field to empty
-                }
-            }
-        });
+        }
     });
+
+    var endTimeInput = flatpickr("#endtime", {
+        enableTime: true,
+        minTime: "8:00",
+        maxTime: "22:00",
+        dateFormat: "Y-m-d H:i", // 添加日期時間格式
+        onClose: function(selectedDates, dateStr, instance) {
+            var selectedEndTime = new Date(dateStr);
+            var selectedStartTime = new Date(document.getElementById('starttime').value);
+            if (selectedStartTime > selectedEndTime) {
+                alert('開始時間不能晚於結束時間。');
+                location.reload(); // 刷新頁面
+            }
+        }
+    });
+});
 </script>
+
     <br>
             <div align="center">
             <b><label for="endtime">座位樓層: </label></b>
