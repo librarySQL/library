@@ -1,4 +1,6 @@
 ﻿# library
+## 系統功能
+- 讓使用者可以透過預約座位減少找尋空位的時間及噪音
 ### [userstatus](https://github.com/librarySQL/library/blob/main/userstatus.php)
 - 使用者身分狀態
 - 可以編輯帳號密碼
