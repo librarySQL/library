@@ -24,7 +24,7 @@
 - 選擇座位會同步顯示此座位的預約紀錄
 - 座位沒預約紀錄會**顯示尚未被預約**
 ### [fetch_reservation](https://github.com/librarySQL/library/blob/main/fetch_reservation.php)
-- 將被選擇的座位的預約紀錄給顯示出來回傳到search_seat的頁面上做顯示
+- 將被選擇的座位的預約紀錄(當天之後的)給顯示出來回傳到search_seat的頁面上做顯示
 ### [seat_reservation](https://github.com/librarySQL/library/blob/main/seat_reservation.php)
 - 將使用者在search seat選擇的seat傳入並且同步顯示該座位的樓層與插座內容
 - 時間選擇有設定為圖書館開館8:00及閉館22:00
