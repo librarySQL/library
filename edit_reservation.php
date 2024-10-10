@@ -23,8 +23,8 @@ if (isset($_GET['reservationId']) && isset($_GET['account']) && isset($_GET['sea
 if (isset($_SESSION['account'])) {
     // 檢查用戶是否登錄
     $useraccount = $_SESSION['account'];
-    $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
-    $con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+    $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';  
+    $con = new mysqli("localhost", "root", "yourpassword", "圖書館座位預約系統");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
