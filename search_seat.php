@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "ccl5266ccl", "圖書館座位預約系統");
+$con = new mysqli("localhost", "root", "yourpassword", "圖書館座位預約系統");  
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
