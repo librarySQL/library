@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+$con = new mysqli("localhost", "root", "yourpassword", "libdb");  
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
