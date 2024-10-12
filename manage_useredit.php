@@ -2,7 +2,7 @@
 session_start();
 
 // 连接数据库
-$con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$con = new mysqli("localhost", "root", "yourpassword", "librarydb");
 
 if ($con->connect_error) {
     die("Connection failed: " . $con->connect_error);
