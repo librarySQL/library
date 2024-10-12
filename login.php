@@ -90,7 +90,7 @@ $msg = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") { 
     // 处理 POST 请求
-    $con = new mysqli("localhost", "root", "eva65348642","librarydb");
+    $con = new mysqli("localhost", "root", "yourpassword","librarydb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
