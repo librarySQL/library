@@ -31,7 +31,7 @@ if (isset($_SESSION['account'])) {
     // 检查用户是否登录
     $useraccount = $_SESSION['account'];
     $accountMessage = isset($_SESSION['account']) ? $_SESSION['account'] . " 您好！" : 'Hello!';
-    $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+    $con = new mysqli("localhost", "root", "yourpassword", "librarydb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
