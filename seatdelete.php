@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
 
     if (!empty($seatId)) {
         // 建立连接
-        $con = new mysqli("localhost", "root", "eva65348642", "librarydb");
+        $con = new mysqli("localhost", "root", "yourpassword", "librarydb");
 
         if ($con->connect_error) {
             die("Connection failed: " . $con->connect_error);
