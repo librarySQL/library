@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['userId'])) {
     $userId = $_GET['userId'];
 
     // 建立連線
-    $con = new mysqli("localhost", "root", "jenny104408!", "libdb");
+    $con = new mysqli("localhost", "root", "yourpassword", "libdb");
 
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
