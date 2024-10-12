@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli("localhost", "root", "eva65348642", "librarydb");
+$conn = new mysqli("localhost", "root", "yourpassword", "librarydb");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
